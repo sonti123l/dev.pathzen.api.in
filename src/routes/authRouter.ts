@@ -1,5 +1,6 @@
 import { Hono } from "hono";
 import { authController } from "../controllers/authController.js";
+import type { ContentfulStatusCode } from "hono/utils/http-status";
 
 const authRouter = new Hono();
 
@@ -10,8 +11,8 @@ authRouter.post("/login", async (c) => {
     password,
   });
 
-  console.log(result);
-  return c.json(JSON.stringify(result, null, 2));
+  console.log(typeof result);
+  return c.json(result, result?.status as ContentfulStatusCode);
 });
 
 export { authRouter };

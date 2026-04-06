@@ -11,7 +11,8 @@ app.get('/', (c) => {
 
 app.use("*", cors());
 
-app.route("/auth", authRouter)
+app.route("/auth", authRouter);
+
 serve({
   fetch: app.fetch,
   port: 3000

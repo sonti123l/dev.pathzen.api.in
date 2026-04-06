@@ -3,5 +3,5 @@ export interface dataSchemaDesign {
   success?: boolean;
   error?: boolean;
   message: string;
-  schema: string;
+  data: any;
 }

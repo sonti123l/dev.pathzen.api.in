@@ -13,21 +13,29 @@ class AuthController {
   }) {
     const emailRegex = /^[a-zA-Z0-`9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-    if (!email || !password) {
-      const statusCodeForNoData = StatusCodes.UNPROCESSABLE_ENTITY;
-      const statusCodeMessageForData = getStatusMessage(statusCodeForNoData);
-      const userJsonData = userSchema.parse({ email, password });
-      const responseResult = createDataSchemaAndReturnIt({
+    let responseResult;
+    let statusCodeForNoData;
+    let statusCodeMessageForData;
+    let userJsonData;
+    let dataVariables;
+    userJsonData = userSchema.safeParse({ email, password });
+
+    if (!userJsonData?.success) {
+      dataVariables = userJsonData?.error?.issues?.map(
+        (eachError) => eachError?.message,
+      );
+      statusCodeForNoData = StatusCodes.UNPROCESSABLE_ENTITY;
+      statusCodeMessageForData = getStatusMessage(statusCodeForNoData);
+      responseResult = createDataSchemaAndReturnIt({
         status: statusCodeForNoData,
         message: statusCodeMessageForData,
-        error: false,
-        schema: JSON.stringify(userJsonData),
+        success: false,
+        data: dataVariables,
       });
-
-      return responseResult
     }
+
+    return responseResult;
   }
 }
 
 export const authController = new AuthController();
-
