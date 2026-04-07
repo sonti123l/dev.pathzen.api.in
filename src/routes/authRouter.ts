@@ -6,7 +6,7 @@ const authRouter = new Hono();
 
 authRouter.post("/login", async (c) => {
   const { email, password } = await c.req.json();
-  const result = authController.getUserLoginCredentials<string, string>({
+  const result = await authController.getUserLoginCredentials<string, string>({
     email,
     password,
   });

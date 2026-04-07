@@ -5,6 +5,7 @@ const createDataSchemaAndReturnIt = ({
   status,
   success,
   message,
+  token,
   data,
 }: dataSchemaDesign) => {
   const dataSchemaType = z.union([
@@ -12,19 +13,29 @@ const createDataSchemaAndReturnIt = ({
     z.array(z.any()),
     z.null(),
   ]);
+  const tokenSchemaType = z.record(z.string(), z.any()).optional();
   const dataSchema = z.object({
     status: z.number(),
-    success: z.boolean().optional(),
+    success: z.boolean(),
     message: z.string(),
+    token: tokenSchemaType,
     data: dataSchemaType,
   });
 
-  let result = dataSchema.safeParse({
-    status,
-    success,
-    message,
-    data,
-  })?.data;
+  let result = token
+    ? dataSchema.safeParse({
+        status,
+        success,
+        message,
+        token,
+        data,
+      })?.data
+    : dataSchema.safeParse({
+        status,
+        success,
+        message,
+        data,
+      })?.data;
   return result;
 };
 
