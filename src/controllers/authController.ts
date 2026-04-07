@@ -1,7 +1,7 @@
 import { getStatusMessage } from "../helpers/constants/messageForStatusCodes.js";
 import { StatusCodes } from "../helpers/constants/statusCodes.js";
-import createDataSchemaAndReturnIt from "../schema/dataSchema.js";
-import userSchema from "../schema/userSchema.js";
+import createDataSchemaAndReturnIt from "../zod/dataSchema.js";
+import userSchema from "../zod/userSchema.js";
 import "dotenv/config";
 import { sign } from "hono/jwt";
 import { parseDuration } from "../utils/jwt.js";
