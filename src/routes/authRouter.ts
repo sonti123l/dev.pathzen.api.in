@@ -10,8 +10,7 @@ authRouter.post("/login", async (c) => {
     email,
     password,
   });
-
-  console.log(typeof result);
+  
   return c.json(result, result?.status as ContentfulStatusCode);
 });
 
