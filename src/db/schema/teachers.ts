@@ -16,13 +16,7 @@ export const teachers = mysqlTable("teachers", {
   teacher_technicalities: varchar("teacher_technicalities", {
     length: 255,
   }).notNull(),
-  teacher_refresh_token: varchar("teacher_refresh_token", { length: 400 })
-    .references(() => users.refresh_token, {
-      onDelete: "cascade",
-      onUpdate: "cascade",
-    }).unique()
-    .notNull(),
-  is_user: varchar("is_user", {length: 30}).default("TEACHER"),
+  is_user: varchar("is_user", { length: 30 }).default("TEACHER"),
   teacher_user_id: int("teacher_user_id").references(() => users.user_id, {
     onDelete: "cascade",
     onUpdate: "cascade",
