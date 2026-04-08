@@ -1,6 +1,7 @@
-import { mysqlTable, int, varchar, timestamp } from "drizzle-orm/mysql-core";
+import { mysqlTable, int, varchar } from "drizzle-orm/mysql-core";
 import { courses } from "./courses.js";
 import { users } from "./users.js";
+import { roles } from "./roles.js";
 
 export const teachers = mysqlTable("teachers", {
   teacher_id: int("teacher_id").primaryKey().notNull(),
@@ -16,8 +17,19 @@ export const teachers = mysqlTable("teachers", {
   teacher_technicalities: varchar("teacher_technicalities", {
     length: 255,
   }).notNull(),
-  is_user: varchar("is_user", { length: 50 })
-    .references(() => users.role)
-    .default("TEACHER"),
-  teacher_user_id: int("teacher_user_id").references(() => users.user_id),
+  teacher_refresh_token: varchar("teacher_refresh_token", { length: 400 })
+    .references(() => users.refresh_token, {
+      onDelete: "cascade",
+      onUpdate: "cascade",
+    }).unique()
+    .notNull(),
+  is_user: int("is_user")
+    .references(() => roles.role_id, {
+      onDelete: "cascade",
+      onUpdate: "cascade",
+    }),
+  teacher_user_id: int("teacher_user_id").references(() => users.user_id, {
+    onDelete: "cascade",
+    onUpdate: "cascade",
+  }),
 });

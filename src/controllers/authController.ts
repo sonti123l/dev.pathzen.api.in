@@ -5,6 +5,9 @@ import userSchema from "../zod/userSchema.js";
 import "dotenv/config";
 import { sign } from "hono/jwt";
 import { parseDuration } from "../utils/jwt.js";
+import { db } from "../db/db.js";
+import { students } from "../db/schema/students.js";
+
 
 const SECRET_KEY = process.env.JWT_ACCESS_SECRET_KEY;
 
@@ -23,6 +26,7 @@ class AuthController {
     let dataVariables;
     userJsonData = userSchema.safeParse({ email, password });
     const now = Math.floor(Date.now() / 1000);
+    
 
     if (!userJsonData?.success) {
       dataVariables = userJsonData?.error?.issues?.map((eachError) => ({
@@ -38,7 +42,10 @@ class AuthController {
         data: dataVariables,
       });
       return responseResult;
+    }else{
+      const usersQuery = db.select().from(students).where
     }
+    
 
     const token = async () => {
       const payload = {

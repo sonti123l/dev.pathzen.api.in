@@ -2,11 +2,11 @@ import {
   mysqlTable,
   int,
   timestamp,
-  mysqlEnum,
+  varchar,
 } from "drizzle-orm/mysql-core";
 
 export const users = mysqlTable("users", {
   user_id: int("user_id").autoincrement().primaryKey(),
-  role: mysqlEnum("role", ["ADMIN", "TEACHER", "STUDENT"]).notNull(),
+  refresh_token: varchar("refresh_token", {length: 400}).notNull().unique(),
   created_at: timestamp("created_at").defaultNow(),
 });
