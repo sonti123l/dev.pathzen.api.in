@@ -11,15 +11,9 @@ export const students = mysqlTable("students", {
   student_email_id: varchar("student_email_id", { length: 255 })
     .notNull()
     .unique(),
-  student_password: varchar("student_password", { length: 30 }).notNull(),
+  student_password: varchar("student_password", { length: 255 }).notNull(),
   created_at: timestamp("created_at").defaultNow(),
   branch_name: varchar("branch_name", { length: 255 }).notNull(),
-  student_refresh_token: varchar("student_refresh_token", { length: 400 })
-    .references(() => users.refresh_token,{
-      onDelete: 'cascade',
-      onUpdate: 'cascade'
-    }).unique()
-    .notNull(),
   student_college_id: int("student_college_id").references(
     () => colleges.college_id,
     {

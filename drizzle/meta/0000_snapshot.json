@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "8bfa3b6f-b874-4615-bf2f-46ef0f8e246a",
+  "id": "9f054824-4d4c-410a-aaa3-2298e72e2020",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "admin": {
@@ -37,7 +37,7 @@
         },
         "is_user": {
           "name": "is_user",
-          "type": "varchar(50)",
+          "type": "varchar(30)",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false,
@@ -53,19 +53,6 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "admin_is_user_users_role_fk": {
-          "name": "admin_is_user_users_role_fk",
-          "tableFrom": "admin",
-          "tableTo": "users",
-          "columnsFrom": [
-            "is_user"
-          ],
-          "columnsTo": [
-            "role"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
         "admin_admin_user_id_users_user_id_fk": {
           "name": "admin_admin_user_id_users_user_id_fk",
           "tableFrom": "admin",
@@ -76,8 +63,8 @@
           "columnsTo": [
             "user_id"
           ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onDelete": "cascade",
+          "onUpdate": "cascade"
         }
       },
       "compositePrimaryKeys": {
@@ -106,7 +93,7 @@
           "type": "int",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false
+          "autoincrement": true
         },
         "college_name": {
           "name": "college_name",
@@ -144,7 +131,7 @@
           "type": "int",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false
+          "autoincrement": true
         },
         "course_name": {
           "name": "course_name",
@@ -157,7 +144,7 @@
           "name": "course_meta_data",
           "type": "json",
           "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
           "autoincrement": false
         },
         "course_created_at": {
@@ -207,7 +194,7 @@
         },
         "student_password": {
           "name": "student_password",
-          "type": "varchar(30)",
+          "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
@@ -269,21 +256,8 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "students_is_user_users_role_fk": {
-          "name": "students_is_user_users_role_fk",
-          "tableFrom": "students",
-          "tableTo": "users",
-          "columnsFrom": [
-            "is_user"
-          ],
-          "columnsTo": [
-            "role"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onDelete": "cascade",
+          "onUpdate": "cascade"
         },
         "students_student_id_users_user_id_fk": {
           "name": "students_student_id_users_user_id_fk",
@@ -295,8 +269,8 @@
           "columnsTo": [
             "user_id"
           ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onDelete": "cascade",
+          "onUpdate": "cascade"
         },
         "students_student_course_id_courses_course_id_fk": {
           "name": "students_student_course_id_courses_course_id_fk",
@@ -308,8 +282,8 @@
           "columnsTo": [
             "course_id"
           ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onDelete": "cascade",
+          "onUpdate": "cascade"
         }
       },
       "compositePrimaryKeys": {
@@ -384,7 +358,7 @@
         },
         "is_user": {
           "name": "is_user",
-          "type": "varchar(50)",
+          "type": "varchar(30)",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false,
@@ -413,19 +387,6 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "teachers_is_user_users_role_fk": {
-          "name": "teachers_is_user_users_role_fk",
-          "tableFrom": "teachers",
-          "tableTo": "users",
-          "columnsFrom": [
-            "is_user"
-          ],
-          "columnsTo": [
-            "role"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
         "teachers_teacher_user_id_users_user_id_fk": {
           "name": "teachers_teacher_user_id_users_user_id_fk",
           "tableFrom": "teachers",
@@ -436,8 +397,8 @@
           "columnsTo": [
             "user_id"
           ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onDelete": "cascade",
+          "onUpdate": "cascade"
         }
       },
       "compositePrimaryKeys": {
@@ -468,9 +429,9 @@
           "notNull": true,
           "autoincrement": true
         },
-        "role": {
-          "name": "role",
-          "type": "enum('ADMIN','TEACHER','STUDENT')",
+        "refresh_token": {
+          "name": "refresh_token",
+          "type": "varchar(400)",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
@@ -494,7 +455,14 @@
           ]
         }
       },
-      "uniqueConstraints": {},
+      "uniqueConstraints": {
+        "users_refresh_token_unique": {
+          "name": "users_refresh_token_unique",
+          "columns": [
+            "refresh_token"
+          ]
+        }
+      },
       "checkConstraint": {}
     }
   },

@@ -5,50 +5,8 @@
     {
       "idx": 0,
       "version": "5",
-      "when": 1775573164870,
-      "tag": "0000_hesitant_nico_minoru",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "5",
-      "when": 1775622266061,
-      "tag": "0001_round_magma",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "5",
-      "when": 1775632648686,
-      "tag": "0002_lively_old_lace",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "5",
-      "when": 1775633802943,
-      "tag": "0003_solid_living_tribunal",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "5",
-      "when": 1775633889587,
-      "tag": "0004_secret_titania",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "5",
-      "when": 1775635748682,
-      "tag": "0005_kind_beyonder",
-      "breakpoints": true
-    },
-    {
-      "idx": 6,
-      "version": "5",
-      "when": 1775637583092,
-      "tag": "0006_flashy_zemo",
+      "when": 1775668851530,
+      "tag": "0000_productive_nick_fury",
       "breakpoints": true
     }
   ]
