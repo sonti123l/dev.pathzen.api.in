@@ -1,6 +1,5 @@
 import { mysqlTable, int, varchar } from "drizzle-orm/mysql-core";
 import { users } from "./users.js";
-import { roles } from "./roles.js";
 
 export const admin = mysqlTable("admin", {
   admin_id: int("admin_id").primaryKey(),
@@ -9,14 +8,12 @@ export const admin = mysqlTable("admin", {
   admin_password: varchar("admin_password", { length: 255 }).notNull(),
   admin_refresh_token: varchar("admin_refresh_token", { length: 255 })
     .references(() => users.refresh_token, {
-      onDelete: 'cascade',
-      onUpdate: 'cascade'
-    }).unique()
-    .notNull(),
-  is_user: int("is_user").references(() => roles.role_id, {
       onDelete: "cascade",
       onUpdate: "cascade",
-    }),
+    })
+    .unique()
+    .notNull(),
+  is_user: varchar("is_user", { length: 30 }).default("ADMIN"),
   admin_user_id: int("admin_user_id").references(() => users.user_id, {
     onDelete: "cascade",
     onUpdate: "cascade",

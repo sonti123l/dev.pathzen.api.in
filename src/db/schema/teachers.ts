@@ -1,7 +1,6 @@
 import { mysqlTable, int, varchar } from "drizzle-orm/mysql-core";
 import { courses } from "./courses.js";
 import { users } from "./users.js";
-import { roles } from "./roles.js";
 
 export const teachers = mysqlTable("teachers", {
   teacher_id: int("teacher_id").primaryKey().notNull(),
@@ -23,11 +22,7 @@ export const teachers = mysqlTable("teachers", {
       onUpdate: "cascade",
     }).unique()
     .notNull(),
-  is_user: int("is_user")
-    .references(() => roles.role_id, {
-      onDelete: "cascade",
-      onUpdate: "cascade",
-    }),
+  is_user: varchar("is_user", {length: 30}).default("TEACHER"),
   teacher_user_id: int("teacher_user_id").references(() => users.user_id, {
     onDelete: "cascade",
     onUpdate: "cascade",

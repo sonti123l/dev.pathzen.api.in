@@ -3,7 +3,7 @@ import { mysqlTable, int, varchar, timestamp } from "drizzle-orm/mysql-core";
 import { colleges } from "./colleges.js";
 import { users } from "./users.js";
 import { courses } from "./courses.js";
-import { roles } from "./roles.js";
+
 
 export const students = mysqlTable("students", {
   id: int("id").primaryKey().autoincrement(),
@@ -27,10 +27,7 @@ export const students = mysqlTable("students", {
       onUpdate: "cascade",
     },
   ),
-  is_user: int("is_user").references(() => roles.role_id,{
-    onDelete: 'cascade',
-    onUpdate: 'cascade'
-  }),
+  is_user: varchar("is_user", {length: 30}).default("STUDENT"),
   student_id: int("student_id").references(() => users.user_id, {
     onDelete: "cascade",
     onUpdate: "cascade",
