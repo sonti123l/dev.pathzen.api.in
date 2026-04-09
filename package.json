@@ -12,11 +12,14 @@
   "dependencies": {
     "@hono/node-server": "^1.19.12",
     "bcrypt": "^6.0.0",
+    "csvtojson": "^2.0.14",
     "dotenv": "^17.4.1",
     "drizzle-orm": "^0.45.2",
+    "exceljs": "^4.4.0",
     "hono": "^4.12.10",
     "jsonwebtoken": "^9.0.3",
     "mysql2": "^3.20.0",
+    "xlsx": "^0.18.5",
     "zod": "^4.3.6"
   },
   "devDependencies": {
