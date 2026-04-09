@@ -8,6 +8,13 @@
       "when": 1775668851530,
       "tag": "0000_productive_nick_fury",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1775747157276,
+      "tag": "0001_chubby_blue_marvel",
+      "breakpoints": true
     }
   ]
 }
