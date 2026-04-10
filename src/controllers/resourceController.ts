@@ -70,6 +70,7 @@ class resourceController {
         total_pages: total_pages,
         limit: limit,
       });
+      
       result = createDataSchemaAndReturnIt({
         status: statusCode,
         message: statusCodeMessage,
