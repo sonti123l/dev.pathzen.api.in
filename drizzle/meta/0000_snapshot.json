@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "9f054824-4d4c-410a-aaa3-2298e72e2020",
+  "id": "f15edca9-6f64-4ad1-957a-d3fb2767fd4e",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "admin": {
@@ -152,16 +152,69 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
+          "autoincrement": false,
+          "default": "(now())"
+        },
+        "field_id": {
+          "name": "field_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "courses_field_id_domains_domain_id_fk": {
+          "name": "courses_field_id_domains_domain_id_fk",
+          "tableFrom": "courses",
+          "tableTo": "domains",
+          "columnsFrom": [
+            "field_id"
+          ],
+          "columnsTo": [
+            "domain_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "courses_course_id": {
+          "name": "courses_course_id",
+          "columns": [
+            "course_id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "domains": {
+      "name": "domains",
+      "columns": {
+        "domain_id": {
+          "name": "domain_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "domain_name": {
+          "name": "domain_name",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true,
           "autoincrement": false
         }
       },
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {
-        "courses_course_id": {
-          "name": "courses_course_id",
+        "domains_domain_id": {
+          "name": "domains_domain_id",
           "columns": [
-            "course_id"
+            "domain_id"
           ]
         }
       },
