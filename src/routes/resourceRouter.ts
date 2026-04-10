@@ -8,9 +8,25 @@ resourceRouter.get("/colleges", async (c) => {
   const limit = Number(c.req.query("limit")) || 10;
 
   const getCollegesList = await resController.getColleges({ page, limit });
-  
 
   return c.json(getCollegesList);
+});
+
+resourceRouter.get("/domains", async (c) => {
+  const page = Number(c.req.query("page")) || 1;
+  const limit = Number(c.req.query("limit")) || 10;
+
+  const getDomainsData = await resController.getDomain({ page, limit });
+
+  return c.json(getDomainsData);
+});
+
+resourceRouter.get("/courses/:domainId", async (c) => {
+  const domain_id = Number(c.req.param("domainId"));
+
+  const results = await resController.getCoursesAccordingToId(domain_id);
+
+  return c.json(results);
 });
 
 export { resourceRouter };
