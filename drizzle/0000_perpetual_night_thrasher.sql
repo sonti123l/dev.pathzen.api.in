@@ -38,6 +38,7 @@ CREATE TABLE `students` (
 	`student_password` varchar(255) NOT NULL,
 	`created_at` timestamp DEFAULT (now()),
 	`branch_name` varchar(255) NOT NULL,
+	`student_roll_no` int NOT NULL,
 	`student_college_id` int,
 	`is_user` varchar(30) DEFAULT 'STUDENT',
 	`student_id` int,
@@ -62,10 +63,13 @@ CREATE TABLE `teachers` (
 --> statement-breakpoint
 CREATE TABLE `users` (
 	`user_id` int AUTO_INCREMENT NOT NULL,
-	`refresh_token` varchar(400) NOT NULL,
+	`refresh_token` varchar(400),
+	`user_email` varchar(255) NOT NULL,
+	`user_password` varchar(255) NOT NULL,
 	`created_at` timestamp DEFAULT (now()),
 	CONSTRAINT `users_user_id` PRIMARY KEY(`user_id`),
-	CONSTRAINT `users_refresh_token_unique` UNIQUE(`refresh_token`)
+	CONSTRAINT `users_refresh_token_unique` UNIQUE(`refresh_token`),
+	CONSTRAINT `users_user_email_unique` UNIQUE(`user_email`)
 );
 --> statement-breakpoint
 ALTER TABLE `admin` ADD CONSTRAINT `admin_admin_user_id_users_user_id_fk` FOREIGN KEY (`admin_user_id`) REFERENCES `users`(`user_id`) ON DELETE cascade ON UPDATE cascade;--> statement-breakpoint

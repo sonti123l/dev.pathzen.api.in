@@ -14,6 +14,7 @@ export const students = mysqlTable("students", {
   student_password: varchar("student_password", { length: 255 }).notNull(),
   created_at: timestamp("created_at").defaultNow(),
   branch_name: varchar("branch_name", { length: 255 }).notNull(),
+  student_roll_no: int("student_roll_no").notNull(),
   student_college_id: int("student_college_id").references(
     () => colleges.college_id,
     {
