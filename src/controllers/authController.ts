@@ -39,7 +39,7 @@ class AuthController {
 
     if (!userJsonData?.success) {
       dataVariables = userJsonData?.error?.issues?.map((eachError) => ({
-        path: eachError.path,
+        key: eachError.path[0],
         message: eachError?.message,
       }));
       statusCodeForNoData = StatusCodes.UNPROCESSABLE_ENTITY;
