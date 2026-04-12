@@ -134,7 +134,6 @@ class AuthController {
         ),
       );
 
-    console.log("checking while registration ", checkUserInDb);
     if (checkUserInDb.length > 0) {
       sendingStatusCodes = StatusCodes.CONFLICT;
       sendingMessageForUser = getStatusMessage(sendingStatusCodes);
@@ -161,7 +160,7 @@ class AuthController {
 
       if (!checkUserSchema?.success) {
         dataVariables = checkUserSchema?.error?.issues?.map((eachError) => ({
-          path: eachError.path,
+          key: eachError.path[0],
           message: eachError?.message,
         }));
         sendingStatusCodes = StatusCodes.UNPROCESSABLE_ENTITY;
