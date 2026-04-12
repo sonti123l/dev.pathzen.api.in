@@ -79,6 +79,10 @@ class AuthController {
     }
 
     if (checkUserInDb.length > 0) {
+      const getStudentFromDb = await db
+        .select()
+        .from(students)
+        .where(eq(students.student_id, checkUserInDb[0]?.user_id));
       tokens = await token({
         email: email,
         password: password,
@@ -88,8 +92,16 @@ class AuthController {
         .update(users)
         .set({ refresh_token: tokens.refresh_token })
         .where(eq(users.user_id, checkUserInDb[0]?.user_id));
-      dataVariables = {
-        email: email,
+
+      const sendStudentData = {
+        student_name: getStudentFromDb[0]?.student_name,
+        student_email_id: getStudentFromDb[0]?.student_email_id,
+        branch_name: getStudentFromDb[0]?.branch_name,
+        student_college_id: getStudentFromDb[0]?.student_college_id,
+        student_roll_no: getStudentFromDb[0]?.student_roll_no,
+        is_user: getStudentFromDb[0]?.is_user,
+        student_id: getStudentFromDb[0]?.student_id,
+        student_course_id: getStudentFromDb[0]?.student_course_id,
       };
 
       if (insertRefreshToken) {
@@ -100,7 +112,7 @@ class AuthController {
           message: statusCodeMessageForData,
           success: true,
           token: tokens,
-          data: dataVariables,
+          data: sendStudentData,
         });
 
         return responseResult;
