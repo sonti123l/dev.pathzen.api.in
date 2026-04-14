@@ -70,7 +70,7 @@ class resourceController {
         total_pages: total_pages,
         limit: limit,
       });
-      
+
       result = createDataSchemaAndReturnIt({
         status: statusCode,
         message: statusCodeMessage,
@@ -109,6 +109,42 @@ class resourceController {
     }
 
     return result;
+  }
+
+  async getCourseDetailsByCourseId(course_id: number) {
+    const getCourseDetails = await db
+      .select()
+      .from(courses)
+      .where(eq(courses.course_id, course_id));
+    let statusCode;
+    let statusCodeMessage;
+    let result;
+
+    if (getCourseDetails?.length > 0) {
+      const getDomainDetails = getCourseDetails[0]?.field_id
+        ? await db
+            .select()
+            .from(domains)
+            .where(eq(domains.domain_id, getCourseDetails?.[0].field_id))
+        : {};
+      if (getDomainDetails) {
+        statusCode = StatusCodes.OK;
+        statusCodeMessage = getStatusMessage(statusCode);
+
+        result = createDataSchemaAndReturnIt({
+          status: statusCode,
+          message: statusCodeMessage,
+          success: true,
+          data: {
+            data: {
+              course: getCourseDetails,
+              domain: getDomainDetails,
+            },
+          },
+        });
+      }
+      return result;
+    }
   }
 }
 
