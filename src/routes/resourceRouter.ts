@@ -29,4 +29,11 @@ resourceRouter.get("/courses/:domainId", async (c) => {
   return c.json(results);
 });
 
+resourceRouter.get("/course/:courseId", async(c) => {
+  const course_id = Number(c.req.param("courseId"));
+
+  const results = await resController.getCourseDetailsByCourseId(course_id);
+  return c.json(results);
+})
+
 export { resourceRouter };
