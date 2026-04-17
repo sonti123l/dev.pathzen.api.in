@@ -117,15 +117,15 @@ class AuthController {
 
         return responseResult;
       }
-    }else{
-       statusCodeForNoData = StatusCodes.NOT_FOUND;
+    } else {
+      statusCodeForNoData = StatusCodes.NOT_FOUND;
       statusCodeMessageForData = getStatusMessage(statusCodeForNoData);
       responseResult = createDataSchemaAndReturnIt({
         status: statusCodeForNoData,
         message: statusCodeMessageForData,
         success: false,
         data: {
-          user:'User does not exist. Please register to proceed.',
+          user: "User does not exist. Please register to proceed.",
         },
       });
 
