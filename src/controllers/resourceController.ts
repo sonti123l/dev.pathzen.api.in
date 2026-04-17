@@ -10,7 +10,9 @@ import { domains } from "../db/schema/course_domain.js";
 import { domainSchema } from "../zod/domainSchema.js";
 import { courses } from "../db/schema/courses.js";
 import { eq } from "drizzle-orm";
-
+import { alias } from "drizzle-orm/mysql-core";
+import { modules } from "../db/schema/module.js";
+import { subModules } from "../db/schema/subModules.js";
 class resourceController {
   async getColleges({ page, limit }: queryParams) {
     const getTotalRecords = await db.select({ value: count() }).from(colleges);
@@ -120,6 +122,25 @@ class resourceController {
     let statusCodeMessage;
     let result;
 
+    const getModulesData = await db
+      .select({
+        module_id: modules.module_id,
+        module_name: modules.module_name,
+        course_id_for_module: modules.course_id_for_module,
+        is_module_complete: modules.is_module_complete,
+        sub_module_id: subModules.sub_module_id,
+        sub_module_title: subModules.sub_module_title,
+        is_sub_module_completed: subModules.is_sub_module_completed,
+        sub_module_in_module_id: subModules.sub_module_in_module_id,
+      })
+      .from(modules)
+      .leftJoin(
+        subModules,
+        eq(modules.module_id, subModules.sub_module_in_module_id),
+      )
+      .where(eq(modules.course_id_for_module, course_id));
+
+
     if (getCourseDetails?.length > 0) {
       const getDomainDetails = getCourseDetails[0]?.field_id
         ? await db
@@ -137,8 +158,9 @@ class resourceController {
           success: true,
           data: {
             data: {
-              course: getCourseDetails,
               domain: getDomainDetails,
+              course: getCourseDetails,
+              modules: getModulesData
             },
           },
         });

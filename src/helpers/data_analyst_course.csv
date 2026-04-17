@@ -1,0 +1,53 @@
+Module,Sub_Module
+Excel (Foundation),Basic Excel
+Excel (Foundation),Rows & Columns
+Excel (Foundation),Formatting
+Excel (Foundation),Sorting & Filtering
+Excel (Foundation),SUM
+Excel (Foundation),AVERAGE
+Excel (Foundation),COUNT
+Excel (Foundation),IF
+Excel (Foundation),VLOOKUP
+Excel (Foundation),XLOOKUP
+Excel (Foundation),INDEX MATCH
+Excel (Foundation),Remove duplicates
+Excel (Foundation),TRIM
+Excel (Foundation),CLEAN
+Excel (Foundation),Text to Columns
+Excel (Foundation),Pivot Tables
+Excel (Foundation),Pivot Charts
+Excel (Foundation),Slicers
+SQL (Most Important),SELECT
+SQL (Most Important),WHERE
+SQL (Most Important),ORDER BY
+SQL (Most Important),GROUP BY
+SQL (Most Important),HAVING
+SQL (Most Important),JOINS
+SQL (Most Important),Subqueries
+SQL (Most Important),Window Functions
+SQL (Most Important),CTE
+Python (Basics for Analysis),Variables
+Python (Basics for Analysis),Loops
+Python (Basics for Analysis),Functions
+Python (Basics for Analysis),Lists
+Python (Basics for Analysis),Dictionaries
+Python (Basics for Analysis),NumPy
+Python (Basics for Analysis),Pandas
+Python (Basics for Analysis),Missing values
+Python (Basics for Analysis),Filtering
+Python (Basics for Analysis),Merge
+Python (Basics for Analysis),Group by
+Visualization (Power BI),Data import
+Visualization (Power BI),Data cleaning
+Visualization (Power BI),Charts
+Visualization (Power BI),Dashboards
+Visualization (Power BI),Filters
+Visualization (Power BI),DAX basics
+Statistics (Foundations),Mean
+Statistics (Foundations),Median
+Statistics (Foundations),Mode
+Statistics (Foundations),Standard deviation
+Statistics (Foundations),Correlation
+Projects (Portfolio),Data Cleaning Project
+Projects (Portfolio),Sales Dashboard
+Projects (Portfolio),Customer Analysis

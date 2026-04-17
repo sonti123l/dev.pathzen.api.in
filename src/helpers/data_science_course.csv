@@ -1,0 +1,45 @@
+Module,Sub_Module
+Python Programming,Variables
+Python Programming,Functions
+Python Programming,Loops
+Python Programming,Lists
+Python Programming,Dictionaries
+Python Programming,List comprehension
+Python Programming,Lambda
+Python Programming,File handling
+Python Programming,OOPS
+Python Programming,Decorators
+Python Programming,Generators
+Mathematics & Statistics,Mean
+Mathematics & Statistics,Variance
+Mathematics & Statistics,Standard deviation
+Mathematics & Statistics,Normal distribution
+Mathematics & Statistics,Probability
+Mathematics & Statistics,Conditional probability
+Mathematics & Statistics,Vectors
+Mathematics & Statistics,Matrices
+Data Libraries,NumPy
+Data Libraries,Arrays
+Data Libraries,Math operations
+Data Libraries,Pandas
+Data Libraries,Data Frames
+Data Libraries,Cleaning
+Data Libraries,Merge
+Data Libraries,Group by
+Visualization,Matplotlib
+Visualization,Seaborn
+Machine Learning,Linear Regression
+Machine Learning,Logistic Regression
+Machine Learning,Decision Tree
+Machine Learning,Random Forest
+Machine Learning,K-Means
+Machine Learning,PCA
+Machine Learning,Accuracy
+Machine Learning,Precision
+Machine Learning,Recall
+SQL (for Analysis),Joins
+SQL (for Analysis),Subqueries
+SQL (for Analysis),Window functions
+Projects (Portfolio),House price prediction
+Projects (Portfolio),Sales prediction
+Projects (Portfolio),Customer segmentation
