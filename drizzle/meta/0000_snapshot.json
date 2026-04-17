@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "ecd822dd-4658-46c8-b993-243bc0628481",
+  "id": "9d944a9f-5023-4a7a-a312-9c3ab20df671",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "admin": {
@@ -151,7 +151,7 @@
           "name": "course_created_at",
           "type": "timestamp",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false,
           "default": "(now())"
         },
@@ -215,6 +215,66 @@
           "name": "domains_domain_id",
           "columns": [
             "domain_id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "modules": {
+      "name": "modules",
+      "columns": {
+        "module_id": {
+          "name": "module_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "module_name": {
+          "name": "module_name",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "course_id_for_module": {
+          "name": "course_id_for_module",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "is_module_complete": {
+          "name": "is_module_complete",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "modules_course_id_for_module_courses_course_id_fk": {
+          "name": "modules_course_id_for_module_courses_course_id_fk",
+          "tableFrom": "modules",
+          "tableTo": "courses",
+          "columnsFrom": [
+            "course_id_for_module"
+          ],
+          "columnsTo": [
+            "course_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "cascade"
+        }
+      },
+      "compositePrimaryKeys": {
+        "modules_module_id": {
+          "name": "modules_module_id",
+          "columns": [
+            "module_id"
           ]
         }
       },
@@ -362,6 +422,66 @@
           ]
         }
       },
+      "checkConstraint": {}
+    },
+    "subModules": {
+      "name": "subModules",
+      "columns": {
+        "sub_module_id": {
+          "name": "sub_module_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "sub_module_title": {
+          "name": "sub_module_title",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "is_sub_module_completed": {
+          "name": "is_sub_module_completed",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": false
+        },
+        "sub_module_in_module_id": {
+          "name": "sub_module_in_module_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "subModules_sub_module_in_module_id_modules_module_id_fk": {
+          "name": "subModules_sub_module_in_module_id_modules_module_id_fk",
+          "tableFrom": "subModules",
+          "tableTo": "modules",
+          "columnsFrom": [
+            "sub_module_in_module_id"
+          ],
+          "columnsTo": [
+            "module_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "cascade"
+        }
+      },
+      "compositePrimaryKeys": {
+        "subModules_sub_module_id": {
+          "name": "subModules_sub_module_id",
+          "columns": [
+            "sub_module_id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
       "checkConstraint": {}
     },
     "teachers": {
