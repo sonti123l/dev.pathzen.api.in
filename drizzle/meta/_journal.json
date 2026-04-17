@@ -8,6 +8,13 @@
       "when": 1775920746297,
       "tag": "0000_perpetual_night_thrasher",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1776413801131,
+      "tag": "0001_foamy_imperial_guard",
+      "breakpoints": true
     }
   ]
 }
