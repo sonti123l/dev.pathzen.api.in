@@ -174,6 +174,38 @@ class resourceController {
       return result;
     }
   }
+
+  async getAllCourses() {
+    const getCourseAndDomainDetails = await db
+      .select({
+        domain_id: domains.domain_id,
+        domain_name: domains.domain_name,
+        course_id: courses.course_id,
+        course_name: courses.course_name,
+        course_meta_data: courses.course_meta_data,
+        course_created_at: courses.course_created_at,
+      })
+      .from(courses)
+      .leftJoin(domains, eq(domains.domain_id, courses.field_id));
+
+    let statusCode;
+    let statusCodeMessage;
+    let result;
+
+    if (getCourseAndDomainDetails?.length > 0) {
+      statusCode = StatusCodes.OK;
+      statusCodeMessage = getStatusMessage(statusCode);
+
+      result = createDataSchemaAndReturnIt({
+        status: statusCode,
+        message: statusCodeMessage,
+        success: true,
+        data: getCourseAndDomainDetails,
+      });
+    }
+
+    return result;
+  }
 }
 
 export const resController = new resourceController();
