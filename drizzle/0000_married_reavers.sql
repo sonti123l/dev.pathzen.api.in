@@ -21,6 +21,7 @@ CREATE TABLE `courses` (
 	`course_name` varchar(255) NOT NULL,
 	`course_meta_data` json,
 	`course_created_at` timestamp NOT NULL DEFAULT (now()),
+	`course_progress` int NOT NULL DEFAULT 0,
 	`field_id` int,
 	CONSTRAINT `courses_course_id` PRIMARY KEY(`course_id`)
 );

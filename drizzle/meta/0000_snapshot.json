@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "9d944a9f-5023-4a7a-a312-9c3ab20df671",
+  "id": "883c7e1f-6938-4654-94aa-1fe6c4a970e3",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "admin": {
@@ -154,6 +154,14 @@
           "notNull": true,
           "autoincrement": false,
           "default": "(now())"
+        },
+        "course_progress": {
+          "name": "course_progress",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
         },
         "field_id": {
           "name": "field_id",
