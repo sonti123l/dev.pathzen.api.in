@@ -13,6 +13,8 @@ import { eq } from "drizzle-orm";
 import { alias } from "drizzle-orm/mysql-core";
 import { modules } from "../db/schema/module.js";
 import { subModules } from "../db/schema/subModules.js";
+import { readCSV } from "../config/insertDataIntoModules.js";
+import { arrangeData, createData } from "../helpers/courseDataStructuring.js";
 class resourceController {
   async getColleges({ page, limit }: queryParams) {
     const getTotalRecords = await db.select({ value: count() }).from(colleges);
@@ -58,6 +60,7 @@ class resourceController {
     let result;
     const total_records = getTotalRecords;
     const total_pages = Math.ceil(total_records[0]?.value / limit);
+
     const getDomainsData = await db
       .select()
       .from(domains)
@@ -140,7 +143,6 @@ class resourceController {
       )
       .where(eq(modules.course_id_for_module, course_id));
 
-
     if (getCourseDetails?.length > 0) {
       const getDomainDetails = getCourseDetails[0]?.field_id
         ? await db
@@ -149,21 +151,25 @@ class resourceController {
             .where(eq(domains.domain_id, getCourseDetails?.[0].field_id))
         : {};
       if (getDomainDetails) {
-        statusCode = StatusCodes.OK;
-        statusCodeMessage = getStatusMessage(statusCode);
+        if (getModulesData?.length > 0) {
+          const getModuleEntireFormattedData =
+            await arrangeData(getModulesData);
+          statusCode = StatusCodes.OK;
+          statusCodeMessage = getStatusMessage(statusCode);
 
-        result = createDataSchemaAndReturnIt({
-          status: statusCode,
-          message: statusCodeMessage,
-          success: true,
-          data: {
+          result = createDataSchemaAndReturnIt({
+            status: statusCode,
+            message: statusCodeMessage,
+            success: true,
             data: {
-              domain: getDomainDetails,
-              course: getCourseDetails,
-              modules: getModulesData
+              data: {
+                domain: getDomainDetails,
+                course: getCourseDetails,
+                modules: getModuleEntireFormattedData,
+              },
             },
-          },
-        });
+          });
+        }
       }
       return result;
     }
