@@ -32,26 +32,26 @@ export const createData = async (
   data: ModuleDataForCourse[],
   courseModuleIds: number[],
 ) => {
-  let setupModule = data?.[0].Module;
+  let setupModule = data?.[0]?.Module;
   let module_index = 0;
   let module_id = courseModuleIds[module_index];
 
   for (let index = 0; index < data.length; index++) {
     const element = data[index];
-    if (element.Module === setupModule) {
-      await db.insert(subModules).values({
-        sub_module_title: element?.Sub_Module,
-        is_sub_module_completed: false,
-        sub_module_in_module_id: module_id,
-      });
-    } else {
-      setupModule = element?.Module;
+
+    if (element.Module !== setupModule) {
+      setupModule = element.Module;
       module_index += 1;
       module_id = courseModuleIds[module_index];
     }
+
+    await db.insert(subModules).values({
+      sub_module_title: element?.Sub_Module,
+      is_sub_module_completed: false,
+      sub_module_in_module_id: module_id,
+    });
   }
 };
-
 export const arrangeData = async (data: ModuleAndSubModuleDetails[]) => {
   if (!data.length) return [];
 
@@ -78,10 +78,8 @@ export const arrangeData = async (data: ModuleAndSubModuleDetails[]) => {
         sub_module_in_module_id: element.sub_module_in_module_id ?? 0,
       });
     } else {
-      // push previous module
       totalModulesData.push({ ...subModulesObjects });
 
-      // reset for new module
       setupModuleId = element.module_id;
 
       subModulesObjects = {

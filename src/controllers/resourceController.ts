@@ -10,11 +10,10 @@ import { domains } from "../db/schema/course_domain.js";
 import { domainSchema } from "../zod/domainSchema.js";
 import { courses } from "../db/schema/courses.js";
 import { eq } from "drizzle-orm";
-import { alias } from "drizzle-orm/mysql-core";
 import { modules } from "../db/schema/module.js";
 import { subModules } from "../db/schema/subModules.js";
-import { readCSV } from "../config/insertDataIntoModules.js";
 import { arrangeData, createData } from "../helpers/courseDataStructuring.js";
+import { readCSV } from "../config/insertDataIntoModules.js";
 class resourceController {
   async getColleges({ page, limit }: queryParams) {
     const getTotalRecords = await db.select({ value: count() }).from(colleges);
@@ -61,6 +60,11 @@ class resourceController {
     const total_records = getTotalRecords;
     const total_pages = Math.ceil(total_records[0]?.value / limit);
 
+    const getData = await readCSV("./public/UI_Designer_course.csv");
+    const insertDataIntoSubModules = createData(
+      getData,
+      [83, 84, 85, 86, 87, 88, 89],
+    );
     const getDomainsData = await db
       .select()
       .from(domains)

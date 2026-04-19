@@ -1,0 +1,25 @@
+Module,Sub_Module
+Networking,TCP/IP
+Networking,Subnetting
+Networking,Ports
+Networking,Protocols
+Linux,Kali Linux
+Linux,Commands
+Linux,Users
+Linux,Permissions
+Programming,Python basics
+Programming,Bash scripting
+Web Security,HTTP
+Web Security,Cookies
+Web Security,Sessions
+Web Security,Authentication
+Ethical Hacking Techniques,Reconnaissance
+Ethical Hacking Techniques,Scanning
+Ethical Hacking Techniques,Exploitation
+Ethical Hacking Techniques,Post exploitation
+Tools,Nmap
+Tools,Metasploit
+Tools,Burp Suite
+Tools,Hydra
+Practice Platforms,TryHackMe
+Practice Platforms,HackTheBox

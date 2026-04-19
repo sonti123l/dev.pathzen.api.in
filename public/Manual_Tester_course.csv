@@ -1,0 +1,31 @@
+Module,Sub_Module
+Software Testing Basics,What is Software Testing
+Software Testing Basics,SDLC
+Software Testing Basics,STLC
+Software Testing Basics,Functional testing
+Software Testing Basics,Non-functional testing
+Software Testing Basics,Regression testing
+Software Testing Basics,Smoke testing
+Software Testing Basics,Sanity testing
+Testing Concepts,Test Case
+Testing Concepts,Test Scenario
+Testing Concepts,Test Plan
+Testing Concepts,Bug lifecycle
+Testing Concepts,Severity vs Priority
+Testing Concepts,Defect report writing
+Manual Testing Techniques,Black box testing
+Manual Testing Techniques,White box testing basics
+Manual Testing Techniques,Boundary value analysis
+Manual Testing Techniques,Equivalence partitioning
+Database Testing,SQL basics
+Database Testing,SELECT
+Database Testing,WHERE
+Database Testing,JOINS
+Web Testing,Form testing
+Web Testing,UI testing
+Web Testing,Cross browser testing
+Web Testing,Validation testing
+Testing Tools,Jira basics
+Testing Tools,Test management tools
+Practice,Write test cases
+Practice,Test real websites

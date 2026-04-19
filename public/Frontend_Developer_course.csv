@@ -1,0 +1,44 @@
+Module,Sub_Module
+HTML,HTML tags
+HTML,Forms
+HTML,Tables
+HTML,Semantic tags
+HTML,Input fields
+HTML,Images & links
+CSS,Selectors
+CSS,Colors
+CSS,Fonts
+CSS,Box Model
+CSS,Flexbox
+CSS,Grid
+CSS,Positioning
+CSS,Responsive design
+CSS,Media queries
+JavaScript,Variables
+JavaScript,Data types
+JavaScript,Functions
+JavaScript,Arrays
+JavaScript,Objects
+JavaScript,Loops
+JavaScript,DOM manipulation
+JavaScript,Events
+JavaScript,ES6 features
+Advanced JavaScript,Closures
+Advanced JavaScript,Promises
+Advanced JavaScript,Async/Await
+Advanced JavaScript,Event loop
+Advanced JavaScript,Hoisting
+Advanced JavaScript,Callbacks
+Frontend Framework (React),Components
+Frontend Framework (React),Props
+Frontend Framework (React),State
+Frontend Framework (React),Hooks
+Frontend Framework (React),Routing
+Tools,Git
+Tools,GitHub
+Tools,VS Code
+Tools,Chrome Dev Tools
+Projects,Portfolio website
+Projects,Dashboard UI
+Projects,Todo app
+Projects,Blog UI

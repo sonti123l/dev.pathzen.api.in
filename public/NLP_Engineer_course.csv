@@ -1,0 +1,25 @@
+Module,Sub_Module
+Python Programming,Strings
+Python Programming,Regex
+Python Programming,Functions
+Python Programming,Lists
+Python Programming,Dictionaries
+Data Processing,Pandas
+Data Processing,NumPy
+NLP Basics,Tokenization
+NLP Basics,Stop words removal
+NLP Basics,Stemming
+NLP Basics,Bag of Words
+NLP Basics,TF-IDF
+NLP Basics,N-grams
+NLP Libraries,NLTK
+NLP Libraries,SpaCy
+Machine Learning for NLP,Text classification
+Machine Learning for NLP,Sentiment analysis
+Deep Learning NLP,RNN
+Deep Learning NLP,LSTM
+Deep Learning NLP,Transformers
+Deep Learning NLP,BERT basics
+Projects,Sentiment analysis
+Projects,Chatbot
+Projects,Text classifier

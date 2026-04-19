@@ -1,0 +1,35 @@
+Module,Sub_Module
+Computer Fundamentals,How computers work
+Computer Fundamentals,CPU, RAM, Storage
+Computer Fundamentals,Operating Systems basics
+Computer Fundamentals,Files & permissions
+Networking,IP Address
+Networking,MAC Address
+Networking,DNS
+Networking,DHCP
+Networking,TCP/IP
+Networking,Routers
+Networking,Switches
+Networking,Ports
+Operating Systems,Linux basic commands
+Operating Systems,Linux file permissions
+Operating Systems,Linux processes
+Operating Systems,Linux users
+Operating Systems,Windows file system
+Operating Systems,Windows users
+Operating Systems,Windows security settings
+Security Fundamentals,CIA Triad
+Security Fundamentals,Encryption basics
+Security Fundamentals,Hashing
+Security Fundamentals,Firewalls
+Security Fundamentals,VPN
+Security Fundamentals,Authentication
+Security Tools,Wireshark
+Security Tools,Nmap
+Security Tools,Burp Suite basics
+Security Tools,Antivirus tools
+Risk & Vulnerability,Vulnerability scanning
+Risk & Vulnerability,CVE concepts
+Risk & Vulnerability,Risk assessment
+Projects,Network scanning
+Projects,Basic penetration testing

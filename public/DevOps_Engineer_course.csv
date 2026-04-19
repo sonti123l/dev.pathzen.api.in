@@ -1,0 +1,29 @@
+Module,Sub_Module
+Programming Basics,Python basics
+Programming Basics,Shell scripting
+Linux,Commands
+Linux,Permissions
+Linux,Processes
+Linux,Services
+Networking,Ports
+Networking,DNS
+Networking,HTTP
+Networking,HTTPS
+Git,init
+Git,commit
+Git,branch
+Git,merge
+Git,pull request
+CI/CD,Jenkins basics
+CI/CD,Pipelines
+CI/CD,Build automation
+Containers (Docker),Images
+Containers (Docker),Containers
+Containers (Docker),Dockerfile
+Container Orchestration (Kubernetes),Pods
+Container Orchestration (Kubernetes),Services
+Container Orchestration (Kubernetes),Deployments
+Cloud,AWS deployment
+Cloud,CI/CD with cloud
+Projects,CI/CD pipeline project
+Projects,Docker deployment
