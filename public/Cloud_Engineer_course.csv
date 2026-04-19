@@ -1,0 +1,32 @@
+Module,Sub_Module
+Computer Fundamentals,What is Cloud Computing
+Computer Fundamentals,Servers
+Computer Fundamentals,Virtual Machines
+Computer Fundamentals,Storage types
+Computer Fundamentals,Networking basics
+Networking,IP Address
+Networking,DNS
+Networking,Subnet
+Networking,TCP/IP
+Networking,Ports
+Networking,Protocols
+Networking,Load Balancer
+Networking,Firewall
+Linux,Basic commands
+Linux,File system
+Linux,Permissions
+Linux,Processes
+Linux,Package installation
+Cloud Platform (AWS),EC2 (Virtual Servers)
+Cloud Platform (AWS),S3 (Storage)
+Cloud Platform (AWS),RDS (Database)
+Cloud Platform (AWS),VPC (Networking)
+Deployment,Application deployment
+Deployment,SSH
+Deployment,Server configuration
+Security,IAM
+Security,Roles
+Security,Policies
+Security,Encryption basics
+Projects,Deploy website on AWS
+Projects,Setup cloud server

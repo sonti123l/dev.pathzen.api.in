@@ -1,0 +1,18 @@
+Module,Sub_Module
+Networking,TCP/IP
+Networking,Ports
+Networking,Protocols
+Operating Systems,Linux basics
+Operating Systems,Windows logs
+Security Basics,Malware types
+Security Basics,Phishing
+Security Basics,Attack types
+Log Analysis,System logs
+Log Analysis,Network logs
+Log Analysis,Event viewer
+SIEM Tools,Splunk basics
+SIEM Tools,ELK Stack
+Incident Response,Detection
+Incident Response,Investigation
+Incident Response,Reporting
+Practice,Log analysis exercises

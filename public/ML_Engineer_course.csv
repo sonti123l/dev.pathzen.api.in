@@ -1,0 +1,43 @@
+Module,Sub_Module
+Python Programming,Variables & Data Types
+Python Programming,Loops
+Python Programming,Functions
+Python Programming,Lists & Dictionaries
+Python Programming,File Handling
+Python Programming,OOPS
+Mathematics,Mean
+Mathematics,Variance
+Mathematics,Standard deviation
+Mathematics,Conditional probability
+Mathematics,Bayes theorem
+Mathematics,Vectors
+Mathematics,Matrices
+Data Analysis Libraries,NumPy
+Data Analysis Libraries,Arrays
+Data Analysis Libraries,Mathematical operations
+Data Analysis Libraries,Pandas
+Data Analysis Libraries,Data Frames
+Data Analysis Libraries,Cleaning
+Data Analysis Libraries,Merge
+Data Analysis Libraries,Group by
+Visualization,Matplotlib
+Visualization,Seaborn
+Machine Learning,Linear Regression
+Machine Learning,Logistic Regression
+Machine Learning,Decision Tree
+Machine Learning,Random Forest
+Machine Learning,KNN
+Machine Learning,SVM
+Machine Learning,K-Means
+Machine Learning,PCA
+Model Evaluation,Accuracy
+Model Evaluation,Precision
+Model Evaluation,Recall
+Model Evaluation,F1 Score
+Model Evaluation,Confusion Matrix
+Model Deployment,Flask / Fast API
+Model Deployment,REST APIs
+Model Deployment,Model deployment
+Projects,Prediction system
+Projects,Recommendation system
+Projects,Classification project

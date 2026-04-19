@@ -1,0 +1,22 @@
+Module,Sub_Module
+Linux (Advanced),Processes
+Linux (Advanced),Services
+Linux (Advanced),Logs
+Linux (Advanced),Performance tools
+Networking,Load balancing
+Networking,DNS
+Networking,Network troubleshooting
+Programming,Python automation
+Programming,Bash scripting
+Cloud,AWS services
+Cloud,Scaling
+Cloud,Monitoring
+Monitoring Tools,Prometheus
+Monitoring Tools,Grafana
+Logging Tools,ELK Stack
+Logging Tools,Log monitoring
+Reliability Engineering,High availability
+Reliability Engineering,Fault tolerance
+Reliability Engineering,Incident response
+Projects,Monitoring system project
+Projects,Auto-scaling setup

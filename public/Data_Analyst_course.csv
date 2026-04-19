@@ -1,0 +1,52 @@
+Module,Sub_Module
+Excel,Rows & Columns
+Excel,Formatting
+Excel,Sorting & Filtering
+Excel,SUM
+Excel,AVERAGE
+Excel,COUNT
+Excel,IF
+Excel,VLOOKUP
+Excel,XLOOKUP
+Excel,INDEX MATCH
+Excel,Remove duplicates
+Excel,TRIM
+Excel,CLEAN
+Excel,Text to Columns
+Excel,Pivot Tables
+Excel,Pivot Charts
+Excel,Slicers
+SQL,SELECT
+SQL,WHERE
+SQL,ORDER BY
+SQL,GROUP BY
+SQL,HAVING
+SQL,JOINS
+SQL,Subqueries
+SQL,Window Functions
+SQL,CTE
+Python,Variables
+Python,Loops
+Python,Functions
+Python,Lists
+Python,Dictionaries
+Python,NumPy
+Python,Pandas
+Python,Missing values
+Python,Filtering
+Python,Merge
+Python,Group by
+Power BI,Data import
+Power BI,Data cleaning
+Power BI,Charts
+Power BI,Dashboards
+Power BI,Filters
+Power BI,DAX basics
+Statistics,Mean
+Statistics,Median
+Statistics,Mode
+Statistics,Standard deviation
+Statistics,Correlation
+Projects,Sales Dashboard
+Projects,Customer Analysis
+Projects,Data Cleaning Project
