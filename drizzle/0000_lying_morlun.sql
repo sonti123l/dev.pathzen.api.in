@@ -1,9 +1,8 @@
 CREATE TABLE `admin` (
-	`admin_id` int NOT NULL,
+	`admin_id` int AUTO_INCREMENT NOT NULL,
 	`admin_name` varchar(100) NOT NULL,
 	`admin_mail` varchar(255) NOT NULL,
 	`admin_password` varchar(255) NOT NULL,
-	`is_user` varchar(30) DEFAULT 'ADMIN',
 	`admin_user_id` int,
 	CONSTRAINT `admin_admin_id` PRIMARY KEY(`admin_id`),
 	CONSTRAINT `admin_admin_mail_unique` UNIQUE(`admin_mail`)
@@ -49,7 +48,6 @@ CREATE TABLE `students` (
 	`branch_name` varchar(255) NOT NULL,
 	`student_roll_no` int NOT NULL,
 	`student_college_id` int,
-	`is_user` varchar(30) DEFAULT 'STUDENT',
 	`student_id` int,
 	`student_course_id` int,
 	CONSTRAINT `students_id` PRIMARY KEY(`id`),
@@ -72,7 +70,6 @@ CREATE TABLE `teachers` (
 	`teacher_course_id` int,
 	`teacher_experience` varchar(30) NOT NULL,
 	`teacher_technicalities` varchar(255) NOT NULL,
-	`is_user` varchar(30) DEFAULT 'TEACHER',
 	`teacher_user_id` int,
 	CONSTRAINT `teachers_teacher_id` PRIMARY KEY(`teacher_id`),
 	CONSTRAINT `teachers_teacher_email_id_unique` UNIQUE(`teacher_email_id`)
@@ -83,6 +80,7 @@ CREATE TABLE `users` (
 	`refresh_token` varchar(400),
 	`user_email` varchar(255) NOT NULL,
 	`user_password` varchar(255) NOT NULL,
+	`role` enum('STUDENT','TEACHER','ADMIN'),
 	`created_at` timestamp DEFAULT (now()),
 	CONSTRAINT `users_user_id` PRIMARY KEY(`user_id`),
 	CONSTRAINT `users_refresh_token_unique` UNIQUE(`refresh_token`),

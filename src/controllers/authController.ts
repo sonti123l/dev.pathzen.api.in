@@ -14,6 +14,7 @@ import type {
 } from "../@types/interfaces/queryParams.js";
 import { userRegisterFormSchema } from "../zod/userRegisterFormSchema.js";
 import { token } from "../helpers/token.js";
+import { admin } from "../db/schema/admin.js";
 
 const hashingPassword = 10;
 
@@ -30,26 +31,30 @@ class AuthController {
     let statusCodeMessageForData;
     let userJsonData;
     let dataVariables;
-    userJsonData = userSchema.safeParse({ email, password });
     let tokens: TokenType = {
       access_token: "",
       refresh_token: "",
     };
     let checkUserInDb;
 
+    userJsonData = userSchema.safeParse({ email, password });
+
     if (!userJsonData?.success) {
       dataVariables = userJsonData?.error?.issues?.map((eachError) => ({
         key: eachError.path[0],
         message: eachError?.message,
       }));
+
       statusCodeForNoData = StatusCodes.UNPROCESSABLE_ENTITY;
       statusCodeMessageForData = getStatusMessage(statusCodeForNoData);
+
       responseResult = createDataSchemaAndReturnIt({
         status: statusCodeForNoData,
         message: statusCodeMessageForData,
         success: false,
         data: dataVariables,
       });
+
       return responseResult;
     }
 
@@ -66,6 +71,7 @@ class AuthController {
     if (!hashedPassword) {
       statusCodeForNoData = StatusCodes.UNAUTHORIZED;
       statusCodeMessageForData = getStatusMessage(statusCodeForNoData);
+
       responseResult = createDataSchemaAndReturnIt({
         status: statusCodeForNoData,
         message: "Authentication is required. Invalid credentials",
@@ -79,57 +85,99 @@ class AuthController {
     }
 
     if (checkUserInDb.length > 0) {
-      const getStudentFromDb = await db
-        .select()
-        .from(students)
-        .where(eq(students.student_id, checkUserInDb[0]?.user_id));
-      tokens = await token({
-        email: email,
-        password: password,
-      });
+      if (checkUserInDb?.[0].role?.toUpperCase() === "STUDENT") {
+        const getStudentFromDb = await db
+          .select()
+          .from(students)
+          .where(eq(students.student_id, checkUserInDb[0]?.user_id));
 
-      const insertRefreshToken = await db
-        .update(users)
-        .set({ refresh_token: tokens.refresh_token })
-        .where(eq(users.user_id, checkUserInDb[0]?.user_id));
-
-      const sendStudentData = {
-        student_name: getStudentFromDb[0]?.student_name,
-        student_email_id: getStudentFromDb[0]?.student_email_id,
-        branch_name: getStudentFromDb[0]?.branch_name,
-        student_college_id: getStudentFromDb[0]?.student_college_id,
-        student_roll_no: getStudentFromDb[0]?.student_roll_no,
-        is_user: getStudentFromDb[0]?.is_user,
-        student_id: getStudentFromDb[0]?.student_id,
-        student_course_id: getStudentFromDb[0]?.student_course_id,
-      };
-
-      if (insertRefreshToken) {
-        statusCodeForNoData = StatusCodes.OK;
-        statusCodeMessageForData = getStatusMessage(statusCodeForNoData);
-        responseResult = createDataSchemaAndReturnIt({
-          status: statusCodeForNoData,
-          message: statusCodeMessageForData,
-          success: true,
-          token: tokens,
-          data: sendStudentData,
+        tokens = await token({
+          email: email,
+          password: password,
         });
 
-        return responseResult;
-      }
-    } else {
-      statusCodeForNoData = StatusCodes.NOT_FOUND;
-      statusCodeMessageForData = getStatusMessage(statusCodeForNoData);
-      responseResult = createDataSchemaAndReturnIt({
-        status: statusCodeForNoData,
-        message: statusCodeMessageForData,
-        success: false,
-        data: {
-          user: "User does not exist. Please register to proceed.",
-        },
-      });
+        const insertRefreshToken = await db
+          .update(users)
+          .set({ refresh_token: tokens.refresh_token })
+          .where(eq(users.user_id, checkUserInDb[0]?.user_id));
 
-      return responseResult;
+        const sendStudentData = {
+          student_name: getStudentFromDb[0]?.student_name,
+          student_email_id: getStudentFromDb[0]?.student_email_id,
+          branch_name: getStudentFromDb[0]?.branch_name,
+          student_college_id: getStudentFromDb[0]?.student_college_id,
+          student_roll_no: getStudentFromDb[0]?.student_roll_no,
+          student_id: getStudentFromDb[0]?.student_id,
+          student_course_id: getStudentFromDb[0]?.student_course_id,
+          role: "STUDENT",
+        };
+
+        if (insertRefreshToken) {
+          statusCodeForNoData = StatusCodes.OK;
+          statusCodeMessageForData = getStatusMessage(statusCodeForNoData);
+
+          responseResult = createDataSchemaAndReturnIt({
+            status: statusCodeForNoData,
+            message: statusCodeMessageForData,
+            success: true,
+            token: tokens,
+            data: sendStudentData,
+          });
+
+          return responseResult;
+        } else {
+          statusCodeForNoData = StatusCodes.NOT_FOUND;
+          statusCodeMessageForData = getStatusMessage(statusCodeForNoData);
+
+          responseResult = createDataSchemaAndReturnIt({
+            status: statusCodeForNoData,
+            message: statusCodeMessageForData,
+            success: false,
+            data: {
+              user: "User does not exist. Please register to proceed.",
+            },
+          });
+
+          return responseResult;
+        }
+      } else if (checkUserInDb?.[0].role?.toUpperCase() === "ADMIN") {
+        const getAdminFromDb = await db
+          .select()
+          .from(admin)
+          .where(eq(admin.admin_user_id, checkUserInDb[0]?.user_id));
+
+        tokens = await token({
+          email: email,
+          password: password,
+        });
+
+        const insertRefreshToken = await db
+          .update(users)
+          .set({ refresh_token: tokens.refresh_token })
+          .where(eq(users.user_id, checkUserInDb[0]?.user_id));
+
+        const adminData = {
+          admin_id: getAdminFromDb[0]?.admin_id,
+          admin_name: getAdminFromDb[0]?.admin_name,
+          admin_mail: getAdminFromDb[0]?.admin_mail,
+          role: "ADMIN",
+        };
+
+        if (insertRefreshToken) {
+          statusCodeForNoData = StatusCodes.OK;
+          statusCodeMessageForData = getStatusMessage(statusCodeForNoData);
+
+          responseResult = createDataSchemaAndReturnIt({
+            status: statusCodeForNoData,
+            message: statusCodeMessageForData,
+            success: true,
+            token: tokens,
+            data: adminData,
+          });
+
+          return responseResult;
+        }
+      }
     }
   }
 
@@ -144,11 +192,13 @@ class AuthController {
     courseId,
   }: UserRegisterForm) {
     const hashedPassword = await bcrypt.hash(`${password}`, hashingPassword);
+
     let sendingStatusCodes;
     let sendingMessageForUser;
     let responseResult;
     let dataVariables;
     let studentCollegeId;
+
     const checkUserInDb = await db
       .select()
       .from(users)
@@ -162,6 +212,7 @@ class AuthController {
     if (checkUserInDb.length > 0) {
       sendingStatusCodes = StatusCodes.CONFLICT;
       sendingMessageForUser = getStatusMessage(sendingStatusCodes);
+
       responseResult = createDataSchemaAndReturnIt({
         status: sendingStatusCodes,
         message: sendingMessageForUser,
@@ -170,6 +221,7 @@ class AuthController {
           error: "User already exists.",
         },
       });
+
       return responseResult;
     } else {
       const checkUserSchema = userRegisterFormSchema.safeParse({
@@ -188,14 +240,17 @@ class AuthController {
           key: eachError.path[0],
           message: eachError?.message,
         }));
+
         sendingStatusCodes = StatusCodes.UNPROCESSABLE_ENTITY;
         sendingMessageForUser = getStatusMessage(sendingStatusCodes);
+
         responseResult = createDataSchemaAndReturnIt({
           status: sendingStatusCodes,
           message: sendingMessageForUser,
           success: false,
           data: dataVariables,
         });
+
         return responseResult;
       }
 
@@ -204,16 +259,17 @@ class AuthController {
         .values({
           user_email: email,
           user_password: hashedPassword,
+          role: "STUDENT",
         })
         .$returningId();
 
       studentCollegeId = rollNo.match(/\d+(\.\d+)?/g);
+
       const insertStudent = await db.insert(students).values({
         student_name: name,
         student_email_id: `${email}`,
         student_password: hashedPassword,
         branch_name: branchName,
-        is_user: "STUDENT",
         student_roll_no: Number(
           String(studentCollegeId?.[0]) +
             String(studentCollegeId?.[1]) +
@@ -227,6 +283,7 @@ class AuthController {
       if (insertStudent) {
         sendingStatusCodes = StatusCodes.OK;
         sendingMessageForUser = getStatusMessage(sendingStatusCodes);
+
         responseResult = createDataSchemaAndReturnIt({
           status: sendingStatusCodes,
           message: sendingMessageForUser,
@@ -235,6 +292,7 @@ class AuthController {
             success_message: "User registered successfully",
           },
         });
+
         return responseResult;
       }
     }
