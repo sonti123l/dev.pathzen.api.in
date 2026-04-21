@@ -1,57 +1,74 @@
 import type { queryParams } from "../@types/interfaces/queryParams.js";
 import { db } from "../db/db.js";
 import { colleges } from "../db/schema/colleges.js";
-import { count } from "drizzle-orm";
+import { count, like } from "drizzle-orm";
 import createDataSchemaAndReturnIt from "../zod/dataSchema.js";
 import { StatusCodes } from "../helpers/constants/statusCodes.js";
 import { getStatusMessage } from "../helpers/constants/messageForStatusCodes.js";
-import { collegeListSchema } from "../zod/collegesListSchema.js";
 import { domains } from "../db/schema/course_domain.js";
 import { domainSchema } from "../zod/domainSchema.js";
 import { courses } from "../db/schema/courses.js";
 import { eq } from "drizzle-orm";
 import { modules } from "../db/schema/module.js";
 import { subModules } from "../db/schema/subModules.js";
-import { arrangeData, createData } from "../helpers/courseDataStructuring.js";
-import { readCSV } from "../config/insertDataIntoModules.js";
+import { arrangeData } from "../helpers/courseDataStructuring.js";
+
 class resourceController {
-  async getColleges({ page, limit }: queryParams) {
-    const getTotalRecords = await db.select({ value: count() }).from(colleges);
-    let statusCode;
-    let statusCodeMessage;
-    let paginationData;
-    let result;
-    const total_records = getTotalRecords;
-    const total_pages = Math.ceil(total_records[0]?.value / limit);
-    const getDataFromColleges = await db
-      .select()
-      .from(colleges)
-      .limit(limit)
-      .offset(page);
-    if (getDataFromColleges) {
-      statusCode = StatusCodes.OK;
-      statusCodeMessage = getStatusMessage(statusCode);
-      paginationData = collegeListSchema.safeParse({
-        page: page,
-        total_records: total_records[0]?.value,
-        total_pages: total_pages,
-        limit: limit,
-      });
-      result = createDataSchemaAndReturnIt({
-        status: statusCode,
-        message: statusCodeMessage,
-        success: true,
-        data: {
-          pagination: paginationData?.data,
-          data: getDataFromColleges,
-        },
-      });
+  async getColleges({ page, limit, search }: queryParams) {
+    const offset = (page - 1) * limit;
+
+    const cleanSearch = search?.trim();
+
+    const whereCondition =
+      cleanSearch && cleanSearch.length > 0
+        ? like(colleges.college_name, `%${cleanSearch}%`)
+        : "";
+
+    let getDataFromColleges;
+    let totalResult;
+
+    if (whereCondition) {
+      getDataFromColleges = await db
+        .select()
+        .from(colleges)
+        .where(whereCondition)
+        .limit(limit)
+        .offset(offset);
+
+      totalResult = await db
+        .select({ value: count() })
+        .from(colleges)
+        .where(whereCondition);
+    } else {
+      getDataFromColleges = await db
+        .select()
+        .from(colleges)
+        .limit(limit)
+        .offset(offset);
+
+      totalResult = await db.select({ value: count() }).from(colleges);
     }
 
-    return result;
+    const total_records = totalResult[0]?.value || 0;
+    const total_pages = Math.ceil(total_records / limit);
+
+    return createDataSchemaAndReturnIt({
+      status: StatusCodes.OK,
+      message: getStatusMessage(StatusCodes.OK),
+      success: true,
+      data: {
+        pagination: {
+          page,
+          total_records,
+          total_pages,
+          limit,
+        },
+        data: getDataFromColleges,
+      },
+    });
   }
 
-  async getDomain({ page, limit }: queryParams) {
+  async getDomain({ page, limit }: { page: number; limit: number }) {
     const getTotalRecords = await db.select({ value: count() }).from(domains);
     let statusCode;
     let statusCodeMessage;
@@ -60,11 +77,6 @@ class resourceController {
     const total_records = getTotalRecords;
     const total_pages = Math.ceil(total_records[0]?.value / limit);
 
-    const getData = await readCSV("./public/UI_Designer_course.csv");
-    const insertDataIntoSubModules = createData(
-      getData,
-      [83, 84, 85, 86, 87, 88, 89],
-    );
     const getDomainsData = await db
       .select()
       .from(domains)

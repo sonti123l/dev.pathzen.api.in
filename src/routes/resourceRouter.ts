@@ -6,8 +6,9 @@ const resourceRouter = new Hono();
 resourceRouter.get("/colleges", async (c) => {
   const page = Number(c.req.query("page")) || 1;
   const limit = Number(c.req.query("limit")) || 10;
+  const search = c.req.query("search") || "";
 
-  const getCollegesList = await resController.getColleges({ page, limit });
+  const getCollegesList = await resController.getColleges({ page, limit, search });
 
   return c.json(getCollegesList);
 });
