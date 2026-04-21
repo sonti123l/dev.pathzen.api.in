@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "883c7e1f-6938-4654-94aa-1fe6c4a970e3",
+  "id": "38db486f-cca8-4ab1-90a3-3f30a5393e24",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "admin": {
@@ -12,7 +12,7 @@
           "type": "int",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false
+          "autoincrement": true
         },
         "admin_name": {
           "name": "admin_name",
@@ -34,14 +34,6 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
-        },
-        "is_user": {
-          "name": "is_user",
-          "type": "varchar(30)",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false,
-          "default": "'ADMIN'"
         },
         "admin_user_id": {
           "name": "admin_user_id",
@@ -349,14 +341,6 @@
           "notNull": false,
           "autoincrement": false
         },
-        "is_user": {
-          "name": "is_user",
-          "type": "varchar(30)",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false,
-          "default": "'STUDENT'"
-        },
         "student_id": {
           "name": "student_id",
           "type": "int",
@@ -544,14 +528,6 @@
           "notNull": true,
           "autoincrement": false
         },
-        "is_user": {
-          "name": "is_user",
-          "type": "varchar(30)",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false,
-          "default": "'TEACHER'"
-        },
         "teacher_user_id": {
           "name": "teacher_user_id",
           "type": "int",
@@ -636,6 +612,13 @@
           "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true,
+          "autoincrement": false
+        },
+        "role": {
+          "name": "role",
+          "type": "enum('STUDENT','TEACHER','ADMIN')",
+          "primaryKey": false,
+          "notNull": false,
           "autoincrement": false
         },
         "created_at": {

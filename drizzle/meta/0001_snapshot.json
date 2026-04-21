@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "a20a3693-83bc-46fd-ab9f-ccf84cd67350",
-  "prevId": "883c7e1f-6938-4654-94aa-1fe6c4a970e3",
+  "id": "9e245124-2449-4360-a648-b46d37334cc1",
+  "prevId": "38db486f-cca8-4ab1-90a3-3f30a5393e24",
   "tables": {
     "admin": {
       "name": "admin",
@@ -34,14 +34,6 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
-        },
-        "is_user": {
-          "name": "is_user",
-          "type": "varchar(30)",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false,
-          "default": "'ADMIN'"
         },
         "admin_user_id": {
           "name": "admin_user_id",
@@ -349,14 +341,6 @@
           "notNull": false,
           "autoincrement": false
         },
-        "is_user": {
-          "name": "is_user",
-          "type": "varchar(30)",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false,
-          "default": "'STUDENT'"
-        },
         "student_id": {
           "name": "student_id",
           "type": "int",
@@ -544,14 +528,6 @@
           "notNull": true,
           "autoincrement": false
         },
-        "is_user": {
-          "name": "is_user",
-          "type": "varchar(30)",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false,
-          "default": "'TEACHER'"
-        },
         "teacher_user_id": {
           "name": "teacher_user_id",
           "type": "int",
@@ -637,6 +613,14 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
+        },
+        "role": {
+          "name": "role",
+          "type": "enum('STUDENT','TEACHER','ADMIN')",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "null"
         },
         "created_at": {
           "name": "created_at",

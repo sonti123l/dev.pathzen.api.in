@@ -22,7 +22,6 @@ export const students = mysqlTable("students", {
       onUpdate: "cascade",
     },
   ),
-  is_user: varchar("is_user", {length: 30}).default("STUDENT"),
   student_id: int("student_id").references(() => users.user_id, {
     onDelete: "cascade",
     onUpdate: "cascade",
