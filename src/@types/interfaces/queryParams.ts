@@ -1,6 +1,7 @@
 export interface queryParams{
     page: number,
-    limit: number
+    limit: number,
+    search: string
 }
 
 export type Pagination = {
