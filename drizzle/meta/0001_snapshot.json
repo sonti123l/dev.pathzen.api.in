@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "9e245124-2449-4360-a648-b46d37334cc1",
-  "prevId": "38db486f-cca8-4ab1-90a3-3f30a5393e24",
+  "id": "e0c606e3-5714-4f16-90f2-c289e603c962",
+  "prevId": "0252c056-24de-4448-b201-156b61adade9",
   "tables": {
     "admin": {
       "name": "admin",
@@ -484,7 +484,7 @@
           "type": "int",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false
+          "autoincrement": true
         },
         "teacher_name": {
           "name": "teacher_name",
@@ -523,7 +523,7 @@
         },
         "teacher_technicalities": {
           "name": "teacher_technicalities",
-          "type": "varchar(255)",
+          "type": "json",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false

@@ -10,3 +10,12 @@ export const userRegisterFormSchema = z.object({
     roll_no: z.string().min(1, "Roll number is required"),
     course_id: z.int().min(1, "Course is required"),
 }).strict();
+
+export const teacherRegistrationSchema = z.object({
+    name: z.string().min(1, "Name is required"),
+    email: z.string().min(1, "Email is required"),
+    password: z.string().min(8, "Password is required"),
+    course_id: z.int().min(1, "Domain is required"),
+    experience: z.string().min(1, "Experience is required"),
+    technical_skills: z.json()
+}).strict();

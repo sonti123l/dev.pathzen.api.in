@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "38db486f-cca8-4ab1-90a3-3f30a5393e24",
+  "id": "0252c056-24de-4448-b201-156b61adade9",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "admin": {
@@ -523,7 +523,7 @@
         },
         "teacher_technicalities": {
           "name": "teacher_technicalities",
-          "type": "varchar(255)",
+          "type": "json",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
@@ -619,7 +619,8 @@
           "type": "enum('STUDENT','TEACHER','ADMIN')",
           "primaryKey": false,
           "notNull": false,
-          "autoincrement": false
+          "autoincrement": false,
+          "default": "null"
         },
         "created_at": {
           "name": "created_at",
