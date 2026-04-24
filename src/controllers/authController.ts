@@ -12,12 +12,24 @@ import type {
   TokenType,
   UserRegisterForm,
 } from "../@types/interfaces/queryParams.js";
-import { userRegisterFormSchema } from "../zod/userRegisterFormSchema.js";
+import {
+  teacherRegistrationSchema,
+  userRegisterFormSchema,
+} from "../zod/userRegisterFormSchema.js";
 import { token } from "../helpers/token.js";
 import { admin } from "../db/schema/admin.js";
+import { teachers } from "../db/schema/teachers.js";
 
-const hashingPassword = 10;
-
+interface TeacherRegistration {
+  fullName: string;
+  emailAddress: string;
+  password: string;
+  assignedCourseId: number;
+  experience: string;
+  technicalSkills: {
+    skills: string[];
+  };
+}
 class AuthController {
   async getUserLoginCredentials<T extends string, V extends string>({
     email,
@@ -191,7 +203,10 @@ class AuthController {
     rollNo,
     courseId,
   }: UserRegisterForm) {
-    const hashedPassword = await bcrypt.hash(`${password}`, hashingPassword);
+    const hashedPassword = await bcrypt.hash(
+      `${password}`,
+      Number(process.env.HASH_PASSWORD),
+    );
 
     let sendingStatusCodes;
     let sendingMessageForUser;
@@ -294,6 +309,111 @@ class AuthController {
         });
 
         return responseResult;
+      }
+    }
+  }
+
+  async registerNewTeacher({
+    fullName,
+    emailAddress,
+    password,
+    assignedCourseId,
+    experience,
+    technicalSkills,
+  }: TeacherRegistration) {
+    let results;
+    let statusCode;
+    let statusCodeMessage;
+    let dataVariables;
+
+    const hashedPassword = await bcrypt.hash(
+      `${password}`,
+      Number(process.env.HASH_PASSWORD),
+    );
+
+    const checkUserInDb = await db
+      .select()
+      .from(users)
+      .where(eq(users.user_email, emailAddress));
+
+    const checkAppErrorForTeacher = teacherRegistrationSchema.safeParse({
+      name: fullName,
+      email: emailAddress,
+      password: password,
+      course_id: assignedCourseId,
+      experience: experience,
+      technical_skills: technicalSkills,
+    });
+
+    if (!checkAppErrorForTeacher?.success) {
+      dataVariables = checkAppErrorForTeacher?.error?.issues?.map(
+        (eachError) => ({
+          key: eachError.path[0],
+          message: eachError?.message,
+        }),
+      );
+
+      statusCode = StatusCodes.UNPROCESSABLE_ENTITY;
+      statusCodeMessage = getStatusMessage(statusCode);
+
+      results = createDataSchemaAndReturnIt({
+        status: statusCode,
+        message: statusCodeMessage,
+        success: false,
+        data: dataVariables,
+      });
+      return results;
+    }
+
+    if (checkUserInDb?.length > 0) {
+      statusCode = StatusCodes.CONFLICT;
+      statusCodeMessage = getStatusMessage(statusCode);
+
+      results = createDataSchemaAndReturnIt({
+        status: statusCode,
+        message: statusCodeMessage,
+        success: false,
+        data: {
+          error: "User already exists.",
+        },
+      });
+      return results;
+    } else {
+      const insertIntoUsers = await db
+        .insert(users)
+        .values({
+          user_email: emailAddress,
+          user_password: hashedPassword,
+          role: "TEACHER",
+        })
+        .$returningId();
+
+      if (insertIntoUsers?.length > 0) {
+        const insertIntoTeacherDb = await db.insert(teachers).values({
+          teacher_email_id: emailAddress,
+          teacher_name: fullName,
+          teacher_password: hashedPassword,
+          teacher_course_id: assignedCourseId,
+          teacher_experience: experience,
+          teacher_technicalities: technicalSkills,
+          teacher_user_id: insertIntoUsers?.[0].user_id,
+        });
+
+        if (insertIntoTeacherDb?.length > 0) {
+          statusCode = StatusCodes.OK;
+          statusCodeMessage = getStatusMessage(statusCode);
+
+          results = createDataSchemaAndReturnIt({
+            status: statusCode,
+            message: statusCodeMessage,
+            success: true,
+            data: {
+              success_message: "User registered successfully",
+            },
+          });
+
+          return results;
+        }
       }
     }
   }

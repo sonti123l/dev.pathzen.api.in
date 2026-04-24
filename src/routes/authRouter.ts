@@ -39,4 +39,20 @@ authRouter.post("/register", async (c) => {
   return c.json(result, result?.status as ContentfulStatusCode);
 });
 
+authRouter.post("/register-teacher", async (c) => {
+  const { fullName, email, password, courseId, technicalSkills, experience } =
+    await c.req.json();
+
+  const result = await authController.registerNewTeacher({
+    fullName: fullName,
+    emailAddress: email,
+    password: password,
+    assignedCourseId: courseId,
+    experience: experience,
+    technicalSkills: technicalSkills,
+  });
+
+  return c.json(result, result?.status as ContentfulStatusCode);
+});
+
 export { authRouter };

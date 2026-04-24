@@ -69,7 +69,7 @@ CREATE TABLE `teachers` (
 	`teacher_password` varchar(255) NOT NULL,
 	`teacher_course_id` int,
 	`teacher_experience` varchar(30) NOT NULL,
-	`teacher_technicalities` varchar(255) NOT NULL,
+	`teacher_technicalities` json NOT NULL,
 	`teacher_user_id` int,
 	CONSTRAINT `teachers_teacher_id` PRIMARY KEY(`teacher_id`),
 	CONSTRAINT `teachers_teacher_email_id_unique` UNIQUE(`teacher_email_id`)
@@ -80,7 +80,7 @@ CREATE TABLE `users` (
 	`refresh_token` varchar(400),
 	`user_email` varchar(255) NOT NULL,
 	`user_password` varchar(255) NOT NULL,
-	`role` enum('STUDENT','TEACHER','ADMIN'),
+	`role` enum('STUDENT','TEACHER','ADMIN') DEFAULT null,
 	`created_at` timestamp DEFAULT (now()),
 	CONSTRAINT `users_user_id` PRIMARY KEY(`user_id`),
 	CONSTRAINT `users_refresh_token_unique` UNIQUE(`refresh_token`),
