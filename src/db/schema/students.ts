@@ -4,7 +4,6 @@ import { colleges } from "./colleges.js";
 import { users } from "./users.js";
 import { courses } from "./courses.js";
 
-
 export const students = mysqlTable("students", {
   id: int("id").primaryKey().autoincrement(),
   student_name: varchar("student_name", { length: 50 }).notNull(),
@@ -34,5 +33,3 @@ export const students = mysqlTable("students", {
     },
   ),
 });
-
-

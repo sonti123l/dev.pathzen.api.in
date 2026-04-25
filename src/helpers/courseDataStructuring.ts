@@ -1,32 +1,10 @@
-import type { ModuleDataForCourse } from "../@types/interfaces/createDataType.js";
+import type {
+  ModuleAndSubModuleDetails,
+  ModuleDataForCourse,
+  subModuleObjectData,
+} from "../@types/interfaces/createDataType.js";
 import { db } from "../db/db.js";
 import { subModules } from "../db/schema/subModules.js";
-
-interface ModuleAndSubModuleDetails {
-  module_id: number;
-  module_name: string;
-  course_id_for_module: number | null;
-  is_module_complete: boolean | null;
-  sub_module_id: number | null;
-  sub_module_title: string | null;
-  is_sub_module_completed: boolean | null;
-  sub_module_in_module_id: number | null;
-}
-
-interface subModuleObjectData {
-  module_id: number;
-  module_name: string;
-  course_id_for_module: number;
-  is_module_complete: boolean;
-  sub_modules: SubModuleDetails[];
-}
-
-interface SubModuleDetails {
-  sub_module_id: number;
-  sub_module_title: string;
-  is_sub_module_completed: boolean;
-  sub_module_in_module_id: number;
-}
 
 export const createData = async (
   data: ModuleDataForCourse[],

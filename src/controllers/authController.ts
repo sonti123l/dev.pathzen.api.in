@@ -215,7 +215,7 @@ class AuthController {
               teacher_experience: getTeacherDetails[0]?.teacher_experience,
               teacher_technicalities:
                 getTeacherDetails[0]?.teacher_technicalities,
-              role: "TEACHER"
+              role: "TEACHER",
             };
 
             statusCodeForNoData = StatusCodes.OK;
