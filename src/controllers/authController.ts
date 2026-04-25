@@ -114,13 +114,13 @@ class AuthController {
           .where(eq(users.user_id, checkUserInDb[0]?.user_id));
 
         const sendStudentData = {
-          student_name: getStudentFromDb[0]?.student_name,
-          student_email_id: getStudentFromDb[0]?.student_email_id,
+          user_name: getStudentFromDb[0]?.student_name,
+          user_mail: getStudentFromDb[0]?.student_email_id,
           branch_name: getStudentFromDb[0]?.branch_name,
           student_college_id: getStudentFromDb[0]?.student_college_id,
           student_roll_no: getStudentFromDb[0]?.student_roll_no,
-          student_id: getStudentFromDb[0]?.student_id,
-          student_course_id: getStudentFromDb[0]?.student_course_id,
+          user_id: getStudentFromDb[0]?.student_id,
+          user_course_id: getStudentFromDb[0]?.student_course_id,
           role: "STUDENT",
         };
 
@@ -169,9 +169,9 @@ class AuthController {
           .where(eq(users.user_id, checkUserInDb[0]?.user_id));
 
         const adminData = {
-          admin_id: getAdminFromDb[0]?.admin_id,
-          admin_name: getAdminFromDb[0]?.admin_name,
-          admin_mail: getAdminFromDb[0]?.admin_mail,
+          user_id: getAdminFromDb[0]?.admin_id,
+          user_name: getAdminFromDb[0]?.admin_name,
+          user_mail: getAdminFromDb[0]?.admin_mail,
           role: "ADMIN",
         };
 
@@ -188,6 +188,63 @@ class AuthController {
           });
 
           return responseResult;
+        }
+      } else {
+        const getTeacherDetails = await db
+          .select()
+          .from(teachers)
+          .where(eq(teachers.teacher_user_id, checkUserInDb[0]?.user_id));
+
+        if (getTeacherDetails?.length > 0) {
+          tokens = await token({
+            email: email,
+            password: password,
+          });
+
+          const insertRefreshToken = await db
+            .update(users)
+            .set({ refresh_token: tokens.refresh_token })
+            .where(eq(users.user_id, checkUserInDb[0]?.user_id));
+
+          if (insertRefreshToken?.length > 0) {
+            const teacherDataReturning = {
+              user_id: getTeacherDetails[0]?.teacher_id,
+              user_name: getTeacherDetails[0]?.teacher_name,
+              user_mail: getTeacherDetails[0]?.teacher_email_id,
+              user_course_id: getTeacherDetails[0]?.teacher_course_id,
+              teacher_experience: getTeacherDetails[0]?.teacher_experience,
+              teacher_technicalities:
+                getTeacherDetails[0]?.teacher_technicalities,
+              role: "TEACHER",
+            };
+
+            statusCodeForNoData = StatusCodes.OK;
+            statusCodeMessageForData = getStatusMessage(statusCodeForNoData);
+
+            responseResult = createDataSchemaAndReturnIt({
+              status: statusCodeForNoData,
+              message: statusCodeMessageForData,
+              success: true,
+              token: tokens,
+              data: teacherDataReturning,
+            });
+
+            return responseResult;
+          } else {
+            statusCodeForNoData = StatusCodes.NOT_FOUND;
+            statusCodeMessageForData = getStatusMessage(statusCodeForNoData);
+
+            responseResult = createDataSchemaAndReturnIt({
+              status: statusCodeForNoData,
+              message: statusCodeMessageForData,
+              success: false,
+              data: {
+                user: "User does not exist. Please register to proceed.",
+              },
+            });
+
+            return responseResult;
+          }
         }
       }
     }
@@ -343,7 +400,7 @@ class AuthController {
       course_id: assignedCourseId,
       experience: experience,
       technical_skills: technicalSkills,
-    }
+    };
 
     const checkAppErrorForTeacher = teacherRegistrationSchema.safeParse({
       name: fullName,

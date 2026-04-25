@@ -4,5 +4,4 @@ import "dotenv/config";
 
 const poolConnection = mysql.createPool(process.env.DB_URL!);
 
-
 export const db = drizzle({ client: poolConnection });

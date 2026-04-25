@@ -1,4 +1,4 @@
-type TimeUnit = 's' | 'm' | 'h' | 'd'
+type TimeUnit = "s" | "m" | "h" | "d";
 
 export function parseDuration(duration: string | undefined): number {
   const units = {
