@@ -39,6 +39,11 @@ CREATE TABLE `modules` (
 	CONSTRAINT `modules_module_id` PRIMARY KEY(`module_id`)
 );
 --> statement-breakpoint
+CREATE TABLE `rooms` (
+	`room_id` int AUTO_INCREMENT NOT NULL,
+	CONSTRAINT `rooms_room_id` PRIMARY KEY(`room_id`)
+);
+--> statement-breakpoint
 CREATE TABLE `students` (
 	`id` int AUTO_INCREMENT NOT NULL,
 	`student_name` varchar(50) NOT NULL,
@@ -58,12 +63,14 @@ CREATE TABLE `subModules` (
 	`sub_module_id` int AUTO_INCREMENT NOT NULL,
 	`sub_module_title` varchar(255) NOT NULL,
 	`is_sub_module_completed` boolean DEFAULT false,
+	`live_time` varchar(30),
+	`live_date` date,
 	`sub_module_in_module_id` int,
 	CONSTRAINT `subModules_sub_module_id` PRIMARY KEY(`sub_module_id`)
 );
 --> statement-breakpoint
 CREATE TABLE `teachers` (
-	`teacher_id` int NOT NULL,
+	`teacher_id` int AUTO_INCREMENT NOT NULL,
 	`teacher_name` varchar(100) NOT NULL,
 	`teacher_email_id` varchar(255) NOT NULL,
 	`teacher_password` varchar(255) NOT NULL,

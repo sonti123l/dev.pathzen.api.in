@@ -1,1 +1,0 @@
-ALTER TABLE `teachers` MODIFY COLUMN `teacher_id` int AUTO_INCREMENT NOT NULL;
