@@ -8,7 +8,11 @@ resourceRouter.get("/colleges", async (c) => {
   const limit = Number(c.req.query("limit")) || 10;
   const search = c.req.query("search") || "";
 
-  const getCollegesList = await resController.getColleges({ page, limit, search });
+  const getCollegesList = await resController.getColleges({
+    page,
+    limit,
+    search,
+  });
 
   return c.json(getCollegesList);
 });

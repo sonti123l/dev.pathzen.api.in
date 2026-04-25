@@ -336,6 +336,15 @@ class AuthController {
       .from(users)
       .where(eq(users.user_email, emailAddress));
 
+    const payload = {
+      name: fullName,
+      email: emailAddress,
+      password: password,
+      course_id: assignedCourseId,
+      experience: experience,
+      technical_skills: technicalSkills,
+    }
+
     const checkAppErrorForTeacher = teacherRegistrationSchema.safeParse({
       name: fullName,
       email: emailAddress,

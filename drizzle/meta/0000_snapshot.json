@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "0252c056-24de-4448-b201-156b61adade9",
+  "id": "cfeb1fda-e452-4103-8b72-9ae9cb96a8fc",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "admin": {
@@ -281,6 +281,30 @@
       "uniqueConstraints": {},
       "checkConstraint": {}
     },
+    "rooms": {
+      "name": "rooms",
+      "columns": {
+        "room_id": {
+          "name": "room_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {
+        "rooms_room_id": {
+          "name": "rooms_room_id",
+          "columns": [
+            "room_id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
     "students": {
       "name": "students",
       "columns": {
@@ -441,6 +465,20 @@
           "autoincrement": false,
           "default": false
         },
+        "live_time": {
+          "name": "live_time",
+          "type": "varchar(30)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "live_date": {
+          "name": "live_date",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
         "sub_module_in_module_id": {
           "name": "sub_module_in_module_id",
           "type": "int",
@@ -484,7 +522,7 @@
           "type": "int",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false
+          "autoincrement": true
         },
         "teacher_name": {
           "name": "teacher_name",
