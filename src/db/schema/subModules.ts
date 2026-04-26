@@ -13,6 +13,7 @@ export const subModules = mysqlTable("subModules", {
   is_sub_module_completed: boolean("is_sub_module_completed").default(false),
   live_time: varchar("live_time", { length: 30 }),
   live_created_date: date("live_date"),
+  is_active: boolean("is_active").default(false),
   sub_module_in_module_id: int("sub_module_in_module_id").references(
     () => modules.module_id,
     {

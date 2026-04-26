@@ -54,6 +54,7 @@ export const arrangeData = async (data: ModuleAndSubModuleDetails[]) => {
         sub_module_title: element.sub_module_title ?? "",
         is_sub_module_completed: element.is_sub_module_completed ?? false,
         sub_module_in_module_id: element.sub_module_in_module_id ?? 0,
+        is_active: element.is_active ?? false,
       });
     } else {
       totalModulesData.push({ ...subModulesObjects });
@@ -71,6 +72,7 @@ export const arrangeData = async (data: ModuleAndSubModuleDetails[]) => {
             sub_module_title: element.sub_module_title ?? "",
             is_sub_module_completed: element.is_sub_module_completed ?? false,
             sub_module_in_module_id: element.sub_module_in_module_id ?? 0,
+            is_active: element.is_active ?? false,
           },
         ],
       };

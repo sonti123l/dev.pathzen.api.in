@@ -8,6 +8,13 @@
       "when": 1777100817995,
       "tag": "0000_wakeful_network",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1777206290488,
+      "tag": "0001_big_hawkeye",
+      "breakpoints": true
     }
   ]
 }

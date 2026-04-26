@@ -17,6 +17,7 @@ export interface ModuleAndSubModuleDetails {
   sub_module_title: string | null;
   is_sub_module_completed: boolean | null;
   sub_module_in_module_id: number | null;
+  is_active: boolean | null;
 }
 
 export interface subModuleObjectData {
@@ -32,4 +33,5 @@ export interface SubModuleDetails {
   sub_module_title: string;
   is_sub_module_completed: boolean;
   sub_module_in_module_id: number;
+  is_active: boolean;
 }

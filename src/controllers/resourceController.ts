@@ -151,6 +151,7 @@ class resourceController {
         sub_module_title: subModules.sub_module_title,
         is_sub_module_completed: subModules.is_sub_module_completed,
         sub_module_in_module_id: subModules.sub_module_in_module_id,
+        is_active: subModules.is_active,
       })
       .from(modules)
       .leftJoin(
