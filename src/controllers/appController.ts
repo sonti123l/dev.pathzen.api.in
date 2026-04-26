@@ -9,9 +9,11 @@ class AppController {
   async updateSubmoduleData({
     id,
     live_time,
+    live_date,
   }: {
     id: number;
     live_time: string;
+    live_date: string;
   }) {
     const getSubModuleData = await db
       .select()
@@ -25,7 +27,7 @@ class AppController {
     if (getSubModuleData?.length > 0) {
       const updateRecord = await db
         .update(subModules)
-        .set({ live_time: live_time })
+        .set({ live_time: live_time, live_created_date: live_date })
         .where(eq(subModules?.sub_module_id, id));
       if (updateRecord.length > 0) {
         statusCode = StatusCodes.OK;
