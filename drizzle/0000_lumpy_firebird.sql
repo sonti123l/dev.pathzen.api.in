@@ -64,7 +64,8 @@ CREATE TABLE `subModules` (
 	`sub_module_title` varchar(255) NOT NULL,
 	`is_sub_module_completed` boolean DEFAULT false,
 	`live_time` varchar(30),
-	`live_date` date,
+	`live_date` varchar(30),
+	`is_active` boolean DEFAULT false,
 	`sub_module_in_module_id` int,
 	CONSTRAINT `subModules_sub_module_id` PRIMARY KEY(`sub_module_id`)
 );
