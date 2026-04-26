@@ -22,7 +22,6 @@ class AppController {
     let statusCodeMessage;
     let responseResult;
 
-    console.log(getSubModuleData);
     if (getSubModuleData?.length > 0) {
       const updateRecord = await db
         .update(subModules)
