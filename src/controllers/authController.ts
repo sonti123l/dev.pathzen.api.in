@@ -19,6 +19,8 @@ import {
 import { token } from "../helpers/token.js";
 import { admin } from "../db/schema/admin.js";
 import { teachers } from "../db/schema/teachers.js";
+// import { readCSV } from "../config/insertDataIntoModules.js";
+// import { createData } from "../helpers/courseDataStructuring.js";
 
 interface TeacherRegistration {
   fullName: string;
@@ -280,6 +282,10 @@ class AuthController {
           eq(users.user_password, hashedPassword),
         ),
       );
+
+    // If data is deleted then it will be used
+    // const data = await readCSV("./public/UI_Designer_course.csv");
+    // const insertData = await createData(data, [90, 91, 92, 93, 94, 95]);
 
     if (checkUserInDb.length > 0) {
       sendingStatusCodes = StatusCodes.CONFLICT;

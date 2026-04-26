@@ -1,0 +1,1 @@
+ALTER TABLE `subModules` ADD `is_active` boolean DEFAULT false;
