@@ -6,6 +6,7 @@ import { jwt } from "hono/jwt";
 import "dotenv/config";
 import { resourceRouter } from "./routes/resourceRouter.js";
 import appRouter from "./routes/appRouter.js";
+import roomRouter from "./routes/roomRouter.js";
 
 const app = new Hono();
 
@@ -20,6 +21,8 @@ app.route("/auth", authRouter);
 app.route("/api", resourceRouter);
 
 app.route("/course", appRouter);
+
+app.route("/rooms", roomRouter);
 
 app.use(
   "/auth/*",

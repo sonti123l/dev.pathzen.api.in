@@ -5,15 +5,8 @@
     {
       "idx": 0,
       "version": "5",
-      "when": 1777214761210,
-      "tag": "0000_lumpy_firebird",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "5",
-      "when": 1777218567337,
-      "tag": "0001_classy_night_thrasher",
+      "when": 1777277719436,
+      "tag": "0000_wide_blur",
       "breakpoints": true
     }
   ]

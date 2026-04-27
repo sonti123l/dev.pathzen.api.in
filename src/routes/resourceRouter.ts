@@ -1,5 +1,6 @@
 import { Hono } from "hono";
 import { resController } from "../controllers/resourceController.js";
+import type { ContentfulStatusCode } from "hono/utils/http-status";
 
 const resourceRouter = new Hono();
 
@@ -14,7 +15,7 @@ resourceRouter.get("/colleges", async (c) => {
     search,
   });
 
-  return c.json(getCollegesList);
+  return c.json(getCollegesList, getCollegesList?.status as ContentfulStatusCode);
 });
 
 resourceRouter.get("/domains", async (c) => {
@@ -23,7 +24,7 @@ resourceRouter.get("/domains", async (c) => {
 
   const getDomainsData = await resController.getDomain({ page, limit });
 
-  return c.json(getDomainsData);
+  return c.json(getDomainsData, getDomainsData?.status as ContentfulStatusCode);
 });
 
 resourceRouter.get("/courses/:domainId", async (c) => {
@@ -31,7 +32,7 @@ resourceRouter.get("/courses/:domainId", async (c) => {
 
   const results = await resController.getCoursesAccordingToId(domain_id);
 
-  return c.json(results);
+  return c.json(results, results?.status as ContentfulStatusCode);
 });
 
 resourceRouter.get("/course/:courseId", async (c) => {
@@ -44,7 +45,7 @@ resourceRouter.get("/course/:courseId", async (c) => {
 resourceRouter.get("/courses", async (c) => {
   const results = await resController.getAllCourses();
 
-  return c.json(results);
+  return c.json(results, results?.status as ContentfulStatusCode);
 });
 
 export { resourceRouter };
