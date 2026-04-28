@@ -2,7 +2,7 @@ import { db } from "../db/db.js";
 import { rooms } from "../db/schema/room.js";
 import { getStatusMessage } from "../helpers/constants/messageForStatusCodes.js";
 import { StatusCodes } from "../helpers/constants/statusCodes.js";
-import { createLiveInput, getRecordingUrl } from "../validations/cloudflare.js";
+import { createLiveInput, checkIsStreamLive, getRecordingUrl } from "../validations/cloudflare.js";
 import createDataSchemaAndReturnIt from "../zod/dataSchema.js";
 import { eq, and } from "drizzle-orm";
 
@@ -61,8 +61,6 @@ class RoomController {
       streamKey,
       hlsUrl,
       iframeUrl,
-      videoUID,
-      customerSubdomain,
     } = await createLiveInput(payload?.title);
 
     // store data into DB
@@ -115,7 +113,6 @@ class RoomController {
       resultResponse = createDataSchemaAndReturnIt({
         status: statusCode,
         message: statusCodeMessage,
-        // FIX: Explicitly return success: false so frontend can check it
         success: false,
         data: {
           message: "No live class right now",
@@ -124,8 +121,7 @@ class RoomController {
       return resultResponse;
     }
 
-    // FIX: Validate that hlsUrl is present before returning
-    if (!activeLive[0].hlsUrl) {
+    if (!activeLive[0].liveInputId) {
       statusCode = StatusCodes.NOT_FOUND;
       statusCodeMessage = getStatusMessage(statusCode);
       resultResponse = createDataSchemaAndReturnIt({
@@ -139,6 +135,9 @@ class RoomController {
       return resultResponse;
     }
 
+    // We return the iframeUrl immediately. The Cloudflare Stream player natively
+    // handles the "Waiting for broadcast" state and will auto-play as soon as
+    // the teacher's WHIP stream successfully connects and starts flowing.
     statusCode = StatusCodes.OK;
     statusCodeMessage = getStatusMessage(statusCode);
     resultResponse = createDataSchemaAndReturnIt({
@@ -146,7 +145,6 @@ class RoomController {
       message: statusCodeMessage,
       success: true,
       data: {
-        hls_url: activeLive[0].hlsUrl,
         room_id: activeLive[0].id,
         iframe_url: activeLive[0].iframeUrl,
       },
