@@ -29,16 +29,16 @@ roomRouter.get("/active/:subModuleId", async (c) => {
   return c.json(result);
 });
 
-// roomRouter.post("/end/:roomId", async (c) => {
-//   const {role} = c.req.json();
-//   const roomId = c.req.param("roomId");
+roomRouter.post("/end/:roomId", async (c) => {
+  const { role } = await c.req.json();
+  const roomId = c.req.param("roomId");
 
-//   const result = await roomController.endLive({
-//     roomId,
-//     payload: { role: role },
-//   });
+  const result = await roomController.endLive({
+    roomId,
+    payload: { role: role },
+  });
 
-//   return c.json(result);
-// });
+  return c.json(result);
+});
 
 export default roomRouter;

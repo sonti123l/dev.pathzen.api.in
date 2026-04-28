@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "9f6fac51-6e79-44ac-b427-dffd84da5190",
+  "id": "ecec37b7-8fe4-457b-8056-1826515c802c",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "admin": {
@@ -321,6 +321,13 @@
         },
         "hls_url": {
           "name": "hls_url",
+          "type": "varchar(500)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "iframe_url": {
+          "name": "iframe_url",
           "type": "varchar(500)",
           "primaryKey": false,
           "notNull": false,

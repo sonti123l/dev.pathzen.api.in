@@ -24,13 +24,35 @@ export async function createLiveInput(title: string) {
   if (!data.result) {
     throw new Error(`Cloudflare error: ${JSON.stringify(data.errors)}`);
   }
+
+  const streamKey = data.result.webRTC.url;
+  // streamKey = https://customer-loe8uzh3j24f0ndb.cloudflarestream.com/UID/webRTC/publish
+
+  // Extract the correct customer subdomain and UID from the stream key itself
+  const match = streamKey.match(
+    /(https:\/\/customer-[^/]+\.cloudflarestream\.com)\/([^/]+)\/webRTC/,
+  );
+
+  if (!match) {
+    throw new Error(`Could not parse Cloudflare stream key: ${streamKey}`);
+  }
+
+  const customerSubdomain = match[1];
+  // → https://customer-loe8uzh3j24f0ndb.cloudflarestream.com
+
+  const videoUID = match[2];
+  // → 79addb7441041ebeea986b1c27bfb714k28a76c05a98a5c842fe4490d167e4744
+
   return {
     liveInputId: data.result.uid,
-    streamKey: data.result.webRTC.url,
-    hlsUrl: `https://customer-${CF_ACCOUNT_ID}.cloudflarestream.com/${data.result.uid}/manifest/video.m3u8`,
+    streamKey,
+    videoUID,
+    customerSubdomain,
+    // Both built from the SAME account — no more mismatch
+    hlsUrl: `${customerSubdomain}/${videoUID}/manifest/video.m3u8`,
+    iframeUrl: `${customerSubdomain}/${videoUID}/iframe`,
   };
 }
-
 // 2. Get viewer count — teacher polls this every 5 seconds
 export async function getViewerCount(liveInputId: string) {
   const res = await fetch(
@@ -52,6 +74,9 @@ export async function getRecordingUrl(liveInputId: string) {
     },
   );
   const data = await res.json();
-  const videoId = data.result?.[0]?.uid;
-  return `https://customer-${CF_ACCOUNT_ID}.cloudflarestream.com/${videoId}/manifest/video.m3u8`;
+  const video = data.result?.[0];
+  if (!video) return null;
+
+  // Use the playback URL directly from Cloudflare — don't build it manually
+  return video.playback?.hls ?? null;
 }

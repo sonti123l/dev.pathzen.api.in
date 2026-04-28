@@ -46,6 +46,7 @@ CREATE TABLE `rooms` (
 	`live_input_id` varchar(255),
 	`stream_key` varchar(500),
 	`hls_url` varchar(500),
+	`iframe_url` varchar(500),
 	`recording_url` varchar(500),
 	`status` varchar(20) DEFAULT 'waiting',
 	`is_recording_posted` boolean DEFAULT false,
