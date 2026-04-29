@@ -5,6 +5,9 @@ import "dotenv/config";
 export async function createLiveInput(title: string) {
   const CF_ACCOUNT_ID = process.env.CLOUDFLARE_ACCOUNT_ID;
   const CF_API_TOKEN = process.env.CLOUDFLARE_API_TOKEN;
+
+  console.log(CF_ACCOUNT_ID);
+  console.log(CF_API_TOKEN);
   const res = await fetch(
     `https://api.cloudflare.com/client/v4/accounts/${CF_ACCOUNT_ID}/stream/live_inputs`,
     {
