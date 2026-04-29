@@ -22,7 +22,7 @@ const createDataSchemaAndReturnIt = ({
     data: dataSchemaType,
   });
 
-  let result = token
+  const result = token
     ? dataSchema.safeParse({
         status,
         success,

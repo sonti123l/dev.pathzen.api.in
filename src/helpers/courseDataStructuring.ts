@@ -43,7 +43,7 @@ export const arrangeData = async (data: ModuleAndSubModuleDetails[]) => {
     sub_modules: [],
   };
 
-  let totalModulesData: subModuleObjectData[] = [];
+  const totalModulesData: subModuleObjectData[] = [];
 
   for (let index = 0; index < data.length; index++) {
     const element = data[index];

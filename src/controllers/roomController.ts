@@ -2,7 +2,7 @@ import { db } from "../db/db.js";
 import { rooms } from "../db/schema/room.js";
 import { getStatusMessage } from "../helpers/constants/messageForStatusCodes.js";
 import { StatusCodes } from "../helpers/constants/statusCodes.js";
-import { createLiveInput, checkIsStreamLive, getRecordingUrl } from "../validations/cloudflare.js";
+import { createLiveInput, getRecordingUrl } from "../validations/cloudflare.js";
 import createDataSchemaAndReturnIt from "../zod/dataSchema.js";
 import { eq, and } from "drizzle-orm";
 
@@ -17,7 +17,7 @@ class RoomController {
     let statusCode;
     let statusCodeMessage;
     let resultResponse;
-    let roomId;
+
 
     if (payload?.role !== "TEACHER") {
       statusCode = StatusCodes.FORBIDDEN;
@@ -64,7 +64,7 @@ class RoomController {
     } = await createLiveInput(payload?.title);
 
     // store data into DB
-    roomId = crypto.randomUUID();
+    const roomId = crypto.randomUUID();
     await db
       .insert(rooms)
       .values({

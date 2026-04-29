@@ -43,15 +43,10 @@ class AuthController {
     let responseResult;
     let statusCodeForNoData;
     let statusCodeMessageForData;
-    let userJsonData;
     let dataVariables;
-    let tokens: TokenType = {
-      access_token: "",
-      refresh_token: "",
-    };
-    let checkUserInDb;
+    let tokens: TokenType;
 
-    userJsonData = userSchema.safeParse({ email, password });
+    const userJsonData = userSchema.safeParse({ email, password });
 
     if (!userJsonData?.success) {
       dataVariables = userJsonData?.error?.issues?.map((eachError) => ({
@@ -72,7 +67,7 @@ class AuthController {
       return responseResult;
     }
 
-    checkUserInDb = await db
+    const checkUserInDb = await db
       .select()
       .from(users)
       .where(eq(users.user_email, email));
@@ -84,7 +79,6 @@ class AuthController {
 
     if (!hashedPassword) {
       statusCodeForNoData = StatusCodes.UNAUTHORIZED;
-      statusCodeMessageForData = getStatusMessage(statusCodeForNoData);
 
       responseResult = createDataSchemaAndReturnIt({
         status: statusCodeForNoData,
@@ -399,14 +393,7 @@ class AuthController {
       .from(users)
       .where(eq(users.user_email, emailAddress));
 
-    const payload = {
-      name: fullName,
-      email: emailAddress,
-      password: password,
-      course_id: assignedCourseId,
-      experience: experience,
-      technical_skills: technicalSkills,
-    };
+
 
     const checkAppErrorForTeacher = teacherRegistrationSchema.safeParse({
       name: fullName,
