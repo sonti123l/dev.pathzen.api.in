@@ -1,10 +1,10 @@
 import "dotenv/config";
 
-const CF_ACCOUNT_ID = process.env.CLOUDFLARE_ACCOUNT_ID;
-const CF_API_TOKEN = process.env.CLOUDFLARE_API_TOKEN;
 
 // 1. Create a live input — called when teacher goes live
 export async function createLiveInput(title: string) {
+  const CF_ACCOUNT_ID = process.env.CLOUDFLARE_ACCOUNT_ID;
+  const CF_API_TOKEN = process.env.CLOUDFLARE_API_TOKEN;
   const res = await fetch(
     `https://api.cloudflare.com/client/v4/accounts/${CF_ACCOUNT_ID}/stream/live_inputs`,
     {
@@ -63,6 +63,8 @@ export async function createLiveInput(title: string) {
 }
 // 2. Get viewer count — teacher polls this every 5 seconds
 export async function getViewerCount(liveInputId: string) {
+  const CF_ACCOUNT_ID = process.env.CLOUDFLARE_ACCOUNT_ID;
+  const CF_API_TOKEN = process.env.CLOUDFLARE_API_TOKEN;
   const res = await fetch(
     `https://api.cloudflare.com/client/v4/accounts/${CF_ACCOUNT_ID}/stream/live_inputs/${liveInputId}/videos`,
     {
@@ -75,6 +77,8 @@ export async function getViewerCount(liveInputId: string) {
 
 // 3. Check if Cloudflare is ACTUALLY receiving the live stream from the teacher.
 export async function checkIsStreamLive(liveInputId: string): Promise<boolean> {
+  const CF_ACCOUNT_ID = process.env.CLOUDFLARE_ACCOUNT_ID;
+  const CF_API_TOKEN = process.env.CLOUDFLARE_API_TOKEN;
   const res = await fetch(
     `https://api.cloudflare.com/client/v4/accounts/${CF_ACCOUNT_ID}/stream/live_inputs/${liveInputId}`,
     {
@@ -82,7 +86,7 @@ export async function checkIsStreamLive(liveInputId: string): Promise<boolean> {
     },
   );
   const data = await res.json();
-  
+
   // state will be "connected" when video is actively flowing to Cloudflare.
   // Before video flows, it's usually "disconnected" or null.
   return data.result?.status?.current?.state === "connected";
@@ -90,6 +94,8 @@ export async function checkIsStreamLive(liveInputId: string): Promise<boolean> {
 
 // 3. Get recording URL — called after teacher ends stream
 export async function getRecordingUrl(liveInputId: string) {
+  const CF_ACCOUNT_ID = process.env.CLOUDFLARE_ACCOUNT_ID;
+  const CF_API_TOKEN = process.env.CLOUDFLARE_API_TOKEN;
   const res = await fetch(
     `https://api.cloudflare.com/client/v4/accounts/${CF_ACCOUNT_ID}/stream/live_inputs/${liveInputId}/videos`,
     {
