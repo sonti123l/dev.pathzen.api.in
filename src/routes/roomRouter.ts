@@ -14,12 +14,18 @@ roomRouter.post("/golive/:subModuleId", async (c) => {
     createdBy: createdBy,
   };
 
-  const results = await roomController.createLiveInputForTeacher({
-    subModuleId,
-    payload,
-  });
+  try {
+    const results = await roomController.createLiveInputForTeacher({
+      subModuleId,
+      payload,
+    });
+    return c.json(results, results?.status as ContentfulStatusCode);
 
-  return c.json(results, results?.status as ContentfulStatusCode);
+  } catch (err) {
+    console.error('GOLIVE ERROR:', err)  // ← this will show in Render logs
+    return c.json({ error: String(err) }, 500)
+  }
+
 });
 
 roomRouter.get("/active/:subModuleId", async (c) => {
