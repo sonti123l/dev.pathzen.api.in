@@ -32,6 +32,13 @@ app.use(
   }),
 );
 
+app.get("/test-env", (c) => {
+  return c.json({
+    cloudflare_account_id: process.env.CLOUDFLARE_ACCOUNT_ID ? "exists" : "missing",
+    cloudflare_api_token: process.env.CLOUDFLARE_API_TOKEN ? "exists" : "missing",
+  })
+})
+
 serve(
   {
     fetch: app.fetch,
