@@ -1,10 +1,11 @@
 import { db } from "../db/db.js";
 import { rooms } from "../db/schema/room.js";
+import { subModules } from "../db/schema/subModules.js";
 import { getStatusMessage } from "../helpers/constants/messageForStatusCodes.js";
 import { StatusCodes } from "../helpers/constants/statusCodes.js";
 import { createLiveInput, getRecordingUrl } from "../validations/cloudflare.js";
 import createDataSchemaAndReturnIt from "../zod/dataSchema.js";
-import { eq, and } from "drizzle-orm";
+import { eq, and, sql } from "drizzle-orm";
 
 class RoomController {
   async createLiveInputForTeacher({
@@ -17,7 +18,6 @@ class RoomController {
     let statusCode;
     let statusCodeMessage;
     let resultResponse;
-
 
     if (payload?.role !== "TEACHER") {
       statusCode = StatusCodes.FORBIDDEN;
@@ -56,12 +56,9 @@ class RoomController {
     }
 
     // call cloudflare
-    const {
-      liveInputId,
-      streamKey,
-      hlsUrl,
-      iframeUrl,
-    } = await createLiveInput(payload?.title);
+    const { liveInputId, streamKey, hlsUrl, iframeUrl } = await createLiveInput(
+      payload?.title,
+    );
 
     // store data into DB
     const roomId = crypto.randomUUID();
@@ -73,7 +70,7 @@ class RoomController {
         liveInputId: liveInputId,
         streamKey: streamKey,
         hlsUrl: hlsUrl,
-        iframeUrl, 
+        iframeUrl,
         status: "live",
         createdBy: payload?.createdBy,
         subModuleId: subModuleId,
@@ -193,15 +190,10 @@ class RoomController {
       return resultResponse;
     }
 
-    // FIX: Mark room as ended in DB immediately so students stop seeing the live
-    // BEFORE waiting for Cloudflare recording — this unblocks the student view right away
     await db.update(rooms).set({ status: "ended" }).where(eq(rooms.id, roomId));
 
-    // Now fetch recording URL from Cloudflare in the background (non-blocking)
-    // We respond to the teacher immediately and update recordingUrl async
     setImmediate(async () => {
       try {
-        // Give Cloudflare time to process the recording
         await new Promise((r) => setTimeout(r, 10000));
         const recordingUrl = await getRecordingUrl(roomData[0].liveInputId!);
         await db
@@ -212,6 +204,17 @@ class RoomController {
           `[RoomController] Recording URL saved for room ${roomId}:`,
           recordingUrl,
         );
+
+        await db
+          .update(subModules)
+          .set({ is_sub_module_completed: true })
+          .where(eq(subModules.sub_module_id, roomData[0]?.subModuleId));
+        await db
+          .update(subModules)
+          .set({ is_active: true })
+          .where(
+            eq(subModules.sub_module_id, sql`${roomData[0]?.subModuleId} + 1`),
+          );
       } catch (err) {
         console.error(
           `[RoomController] Failed to fetch recording URL for room ${roomId}:`,
