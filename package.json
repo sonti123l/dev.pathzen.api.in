@@ -22,6 +22,7 @@
     "hono": "^4.12.10",
     "jsonwebtoken": "^9.0.3",
     "mysql2": "^3.20.0",
+    "nodemailer": "^8.0.7",
     "xlsx": "^0.18.5",
     "zod": "^4.3.6"
   },
@@ -29,6 +30,7 @@
     "@eslint/js": "^10.0.1",
     "@types/bcrypt": "^6.0.0",
     "@types/node": "^20.11.17",
+    "@types/nodemailer": "^8.0.0",
     "drizzle-kit": "^0.31.10",
     "eslint": "^10.2.1",
     "globals": "^17.5.0",

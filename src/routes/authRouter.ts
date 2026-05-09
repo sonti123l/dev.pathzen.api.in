@@ -55,4 +55,28 @@ authRouter.post("/register-teacher", async (c) => {
   return c.json(result, result?.status as ContentfulStatusCode);
 });
 
+authRouter.post("/forgot-password", async (c) => {
+  const { email } = await c.req.json();
+  const result = await authController.forgotPassword(email);
+  return c.json(result, result?.status as ContentfulStatusCode);
+});
+
+authRouter.post("/verify-otp", async (c) => {
+  const { email, otp } = await c.req.json();
+  const result = await authController.verifyOtp(email, otp);
+  return c.json(result, result?.status as ContentfulStatusCode);
+});
+
+authRouter.post("/resend-otp", async (c) => {
+  const { email } = await c.req.json();
+  const result = await authController.resendOtp(email);
+  return c.json(result, result?.status as ContentfulStatusCode);
+});
+
+authRouter.post("/reset-password", async (c) => {
+  const { email, otp, newPassword } = await c.req.json();
+  const result = await authController.resetPassword(email, otp, newPassword);
+  return c.json(result, result?.status as ContentfulStatusCode);
+});
+
 export { authRouter };

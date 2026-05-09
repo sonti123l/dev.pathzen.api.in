@@ -8,6 +8,8 @@ import { students } from "../db/schema/students.js";
 import { eq, and } from "drizzle-orm";
 import bcrypt from "bcrypt";
 import { users } from "../db/schema/users.js";
+import { otps } from "../db/schema/otps.js";
+import { sendOTP } from "../helpers/emailService.js";
 import type {
   TokenType,
   UserRegisterForm,
@@ -72,27 +74,26 @@ class AuthController {
       .from(users)
       .where(eq(users.user_email, email));
 
-    const hashedPassword = await bcrypt.compare(
-      `${password}`,
-      checkUserInDb[0]?.user_password,
-    );
-
-    if (!hashedPassword) {
-      statusCodeForNoData = StatusCodes.UNAUTHORIZED;
-
-      responseResult = createDataSchemaAndReturnIt({
-        status: statusCodeForNoData,
-        message: "Authentication is required. Invalid credentials",
-        success: false,
-        data: {
-          password: "Invalid Email or Password",
-        },
-      });
-
-      return responseResult;
-    }
-
     if (checkUserInDb.length > 0) {
+      const hashedPassword = await bcrypt.compare(
+        `${password}`,
+        checkUserInDb[0]?.user_password,
+      );
+      if (!hashedPassword) {
+        statusCodeForNoData = StatusCodes.UNAUTHORIZED;
+
+        responseResult = createDataSchemaAndReturnIt({
+          status: statusCodeForNoData,
+          message: "Authentication is required. Invalid credentials",
+          success: false,
+          data: {
+            message: "Invalid Email or Password",
+          },
+        });
+
+        return responseResult;
+      }
+
       if (checkUserInDb?.[0].role?.toUpperCase() === "STUDENT") {
         const getStudentFromDb = await db
           .select()
@@ -226,23 +227,23 @@ class AuthController {
             });
 
             return responseResult;
-          } else {
-            statusCodeForNoData = StatusCodes.NOT_FOUND;
-            statusCodeMessageForData = getStatusMessage(statusCodeForNoData);
-
-            responseResult = createDataSchemaAndReturnIt({
-              status: statusCodeForNoData,
-              message: statusCodeMessageForData,
-              success: false,
-              data: {
-                user: "User does not exist. Please register to proceed.",
-              },
-            });
-
-            return responseResult;
           }
         }
       }
+    } else {
+      statusCodeForNoData = StatusCodes.NOT_FOUND;
+      statusCodeMessageForData = getStatusMessage(statusCodeForNoData);
+
+      responseResult = createDataSchemaAndReturnIt({
+        status: statusCodeForNoData,
+        message: statusCodeMessageForData,
+        success: false,
+        data: {
+          user: "User does not exist. Please register to proceed.",
+        },
+      });
+
+      return responseResult;
     }
   }
 
@@ -344,8 +345,8 @@ class AuthController {
         branch_name: branchName,
         student_roll_no: Number(
           String(studentCollegeId?.[0]) +
-            String(studentCollegeId?.[1]) +
-            studentCollegeId?.[2],
+          String(studentCollegeId?.[1]) +
+          studentCollegeId?.[2],
         ),
         student_college_id: collegeId,
         student_id: insertUser[0]?.user_id,
@@ -392,8 +393,6 @@ class AuthController {
       .select()
       .from(users)
       .where(eq(users.user_email, emailAddress));
-
-
 
     const checkAppErrorForTeacher = teacherRegistrationSchema.safeParse({
       name: fullName,
@@ -475,6 +474,193 @@ class AuthController {
         }
       }
     }
+  }
+
+  async forgotPassword(email: string) {
+    let responseResult;
+    let statusCode;
+
+    console.log(" Forgot password called with email: ", email);
+    const checkUserInDb = await db
+      .select()
+      .from(users)
+      .where(eq(users.user_email, email));
+
+    if (checkUserInDb.length === 0) {
+      statusCode = StatusCodes.NOT_FOUND;
+      responseResult = createDataSchemaAndReturnIt({
+        status: statusCode,
+        message: "User not found",
+        success: false,
+        data: { error: "User with this email does not exist." },
+      });
+      return responseResult;
+    }
+
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
+
+    await db.delete(otps).where(eq(otps.email, email));
+
+    await db.insert(otps).values({
+      email: email,
+      otp: otp,
+      expires_at: expiresAt,
+      user_id: checkUserInDb[0].user_id,
+    });
+
+    const isEmailSent = await sendOTP(email, otp);
+
+    if (!isEmailSent) {
+      statusCode = StatusCodes.INTERNAL_SERVER_ERROR;
+      responseResult = createDataSchemaAndReturnIt({
+        status: statusCode,
+        message: "Failed to send OTP",
+        success: false,
+        data: { error: "Could not send OTP email. Please try again later." },
+      });
+      return responseResult;
+    }
+
+    statusCode = StatusCodes.OK;
+    responseResult = createDataSchemaAndReturnIt({
+      status: statusCode,
+      message: "OTP sent successfully",
+      success: true,
+      data: { success_message: "An OTP has been sent to your email address." },
+    });
+    return responseResult;
+  }
+
+  async verifyOtp(email: string, otp: string) {
+    let responseResult;
+    let statusCode;
+
+    const otpRecord = await db
+      .select()
+      .from(otps)
+      .where(and(eq(otps.email, email), eq(otps.otp, otp)));
+
+    if (otpRecord.length === 0) {
+      statusCode = StatusCodes.BAD_REQUEST;
+      responseResult = createDataSchemaAndReturnIt({
+        status: statusCode,
+        message: "Invalid OTP",
+        success: false,
+        data: { error: "The provided OTP is incorrect." },
+      });
+      return responseResult;
+    }
+
+    const currentDateTime = new Date();
+    if (new Date(otpRecord[0].expires_at) < currentDateTime) {
+      statusCode = StatusCodes.BAD_REQUEST;
+      responseResult = createDataSchemaAndReturnIt({
+        status: statusCode,
+        message: "Expired OTP",
+        success: false,
+        data: { error: "The provided OTP has expired. Please request a new one." },
+      });
+      return responseResult;
+    }
+
+    statusCode = StatusCodes.OK;
+    responseResult = createDataSchemaAndReturnIt({
+      status: statusCode,
+      message: "OTP verified successfully",
+      success: true,
+      data: { success_message: "OTP is valid." },
+    });
+    return responseResult;
+  }
+
+  async resendOtp(email: string) {
+    let responseResult;
+    let statusCode;
+
+    const checkUserInDb = await db
+      .select()
+      .from(users)
+      .where(eq(users.user_email, email));
+
+    if (checkUserInDb.length === 0) {
+      statusCode = StatusCodes.NOT_FOUND;
+      responseResult = createDataSchemaAndReturnIt({
+        status: statusCode,
+        message: "User not found",
+        success: false,
+        data: { error: "User with this email does not exist." },
+      });
+      return responseResult;
+    }
+
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+
+    // Delete existing OTPs
+    await db.delete(otps).where(eq(otps.email, email));
+
+    // Insert new OTP
+    await db.insert(otps).values({
+      email: email,
+      otp: otp,
+      expires_at: expiresAt,
+      user_id: checkUserInDb[0].user_id,
+    });
+
+    const isEmailSent = await sendOTP(email, otp);
+
+    if (!isEmailSent) {
+      statusCode = StatusCodes.INTERNAL_SERVER_ERROR;
+      responseResult = createDataSchemaAndReturnIt({
+        status: statusCode,
+        message: "Failed to resend OTP",
+        success: false,
+        data: { error: "Could not send OTP email. Please try again later." },
+      });
+      return responseResult;
+    }
+
+    statusCode = StatusCodes.OK;
+    responseResult = createDataSchemaAndReturnIt({
+      status: statusCode,
+      message: "OTP resent successfully",
+      success: true,
+      data: { success_message: "A new OTP has been sent to your email address." },
+    });
+    return responseResult;
+  }
+
+  async resetPassword(email: string, otp: string, newPassword: string) {
+    let responseResult;
+    let statusCode;
+
+    // Verify OTP first
+    const verifyResult = await this.verifyOtp(email, otp);
+    if (!verifyResult?.success) {
+      return verifyResult;
+    }
+
+    const hashedPassword = await bcrypt.hash(
+      `${newPassword}`,
+      Number(process.env.HASH_PASSWORD),
+    );
+
+    await db
+      .update(users)
+      .set({ user_password: hashedPassword })
+      .where(eq(users.user_email, email));
+
+    await db.delete(otps).where(eq(otps.email, email));
+
+    statusCode = StatusCodes.OK;
+    responseResult = createDataSchemaAndReturnIt({
+      status: statusCode,
+      message: "Password reset successfully",
+      success: true,
+      data: { success_message: "Your password has been changed successfully. You can now login." },
+    });
+    return responseResult;
   }
 }
 

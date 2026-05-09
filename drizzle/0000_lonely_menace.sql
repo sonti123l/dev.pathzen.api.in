@@ -40,6 +40,16 @@ CREATE TABLE `modules` (
 	CONSTRAINT `modules_module_id` PRIMARY KEY(`module_id`)
 );
 --> statement-breakpoint
+CREATE TABLE `otps` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`email` varchar(255) NOT NULL,
+	`otp` varchar(6) NOT NULL,
+	`expires_at` timestamp NOT NULL,
+	`created_at` timestamp DEFAULT (now()),
+	`user_id` int NOT NULL,
+	CONSTRAINT `otps_id` PRIMARY KEY(`id`)
+);
+--> statement-breakpoint
 CREATE TABLE `rooms` (
 	`id` varchar(36) NOT NULL,
 	`title` varchar(255) NOT NULL,
@@ -111,6 +121,7 @@ CREATE TABLE `users` (
 ALTER TABLE `admin` ADD CONSTRAINT `admin_admin_user_id_users_user_id_fk` FOREIGN KEY (`admin_user_id`) REFERENCES `users`(`user_id`) ON DELETE cascade ON UPDATE cascade;--> statement-breakpoint
 ALTER TABLE `courses` ADD CONSTRAINT `courses_field_id_domains_domain_id_fk` FOREIGN KEY (`field_id`) REFERENCES `domains`(`domain_id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `modules` ADD CONSTRAINT `modules_course_id_for_module_courses_course_id_fk` FOREIGN KEY (`course_id_for_module`) REFERENCES `courses`(`course_id`) ON DELETE cascade ON UPDATE cascade;--> statement-breakpoint
+ALTER TABLE `otps` ADD CONSTRAINT `otps_user_id_users_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`) ON DELETE cascade ON UPDATE cascade;--> statement-breakpoint
 ALTER TABLE `rooms` ADD CONSTRAINT `rooms_sub_module_id_subModules_sub_module_id_fk` FOREIGN KEY (`sub_module_id`) REFERENCES `subModules`(`sub_module_id`) ON DELETE cascade ON UPDATE cascade;--> statement-breakpoint
 ALTER TABLE `students` ADD CONSTRAINT `students_student_college_id_colleges_id_fk` FOREIGN KEY (`student_college_id`) REFERENCES `colleges`(`id`) ON DELETE cascade ON UPDATE cascade;--> statement-breakpoint
 ALTER TABLE `students` ADD CONSTRAINT `students_student_id_users_user_id_fk` FOREIGN KEY (`student_id`) REFERENCES `users`(`user_id`) ON DELETE cascade ON UPDATE cascade;--> statement-breakpoint
