@@ -336,7 +336,7 @@ class AuthController {
         })
         .$returningId();
 
-      studentCollegeId = rollNo.match(/\d+(\.\d+)?/g);
+      studentCollegeId = String(rollNo).match(/\d+(\.\d+)?/g);
 
       const insertStudent = await db.insert(students).values({
         student_name: name,
@@ -632,8 +632,7 @@ class AuthController {
   }
 
   async resetPassword(email: string, otp: string, newPassword: string) {
-    let responseResult;
-    let statusCode;
+
 
     // Verify OTP first
     const verifyResult = await this.verifyOtp(email, otp);
@@ -653,8 +652,8 @@ class AuthController {
 
     await db.delete(otps).where(eq(otps.email, email));
 
-    statusCode = StatusCodes.OK;
-    responseResult = createDataSchemaAndReturnIt({
+    const statusCode = StatusCodes.OK;
+    const responseResult = createDataSchemaAndReturnIt({
       status: statusCode,
       message: "Password reset successfully",
       success: true,
