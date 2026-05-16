@@ -6,15 +6,13 @@ const SECRET_KEY = process.env.JWT_ACCESS_SECRET_KEY;
 
 export const token = async ({
   email,
-  password,
 }: {
   email: string;
-  password: string;
+  password?: string;
 }) => {
   const now = Math.floor(Date.now() / 1000);
   const payload = {
     userEmail: email,
-    userPassword: password,
   };
   const access_token = await sign(
     {
@@ -23,6 +21,7 @@ export const token = async ({
       exp: now + parseDuration(process.env.JWT_ACCESS_EXPIRES_IN),
     },
     SECRET_KEY ?? "",
+    "HS256",
   );
 
   const refresh_token = await sign(
@@ -32,6 +31,7 @@ export const token = async ({
       exp: now + parseDuration(process.env.JWT_REFRESH_EXPIRES_IN),
     },
     process.env.JWT_REFRESH_SECRET_KEY ?? "",
+    "HS256",
   );
 
   return { access_token: access_token, refresh_token: refresh_token };

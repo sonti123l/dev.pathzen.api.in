@@ -16,21 +16,26 @@ app.get("/", (c) => {
 
 app.use("*", cors());
 
+// Protect only API and course routes — login/register do NOT need a token
+app.use("/api/*", jwt({
+  secret: `${process.env.JWT_ACCESS_SECRET_KEY}`,
+  alg: "HS256",
+}));
+
+app.use("/course/*", jwt({
+  secret: `${process.env.JWT_ACCESS_SECRET_KEY}`,
+  alg: "HS256",
+}));
+
+app.use("/rooms/*", jwt({
+  secret: `${process.env.JWT_ACCESS_SECRET_KEY}`,
+  alg: "HS256",
+}));
+
 app.route("/auth", authRouter);
-
 app.route("/api", resourceRouter);
-
 app.route("/course", appRouter);
-
 app.route("/rooms", roomRouter);
-
-app.use(
-  "/auth/*",
-  jwt({
-    secret: `${process.env.JWT_ACCESS_SECRET_KEY}`,
-    alg: "ES256",
-  }),
-);
 
 app.get("/test-env", (c) => {
   return c.json({

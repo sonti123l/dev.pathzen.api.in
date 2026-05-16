@@ -5,7 +5,7 @@ const checkAuthorization = async (authorizationKey: string) => {
   const verifyUser = await verify(
     authorizationKey,
     `${process.env.JWT_ACCESS_SECRET_KEY}`,
-    "ES256",
+    "HS256",
   );
   return verifyUser;
 };

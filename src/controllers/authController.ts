@@ -102,7 +102,6 @@ class AuthController {
 
         tokens = await token({
           email: email,
-          password: password,
         });
 
         const insertRefreshToken = await db
@@ -157,7 +156,6 @@ class AuthController {
 
         tokens = await token({
           email: email,
-          password: password,
         });
 
         const insertRefreshToken = await db
@@ -186,6 +184,18 @@ class AuthController {
 
           return responseResult;
         }
+
+        // Fallback if refresh token update fails
+        statusCodeForNoData = StatusCodes.INTERNAL_SERVER_ERROR;
+        statusCodeMessageForData = getStatusMessage(statusCodeForNoData);
+        responseResult = createDataSchemaAndReturnIt({
+          status: statusCodeForNoData,
+          message: statusCodeMessageForData,
+          success: false,
+          data: { error: "Failed to update session. Please try again." },
+        });
+        return responseResult;
+
       } else {
         const getTeacherDetails = await db
           .select()
@@ -195,7 +205,6 @@ class AuthController {
         if (getTeacherDetails?.length > 0) {
           tokens = await token({
             email: email,
-            password: password,
           });
 
           const insertRefreshToken = await db
@@ -229,6 +238,17 @@ class AuthController {
             return responseResult;
           }
         }
+
+        // Fallback if teacher not found or session update fails
+        statusCodeForNoData = StatusCodes.INTERNAL_SERVER_ERROR;
+        statusCodeMessageForData = getStatusMessage(statusCodeForNoData);
+        responseResult = createDataSchemaAndReturnIt({
+          status: statusCodeForNoData,
+          message: statusCodeMessageForData,
+          success: false,
+          data: { error: "Login failed. Please try again." },
+        });
+        return responseResult;
       }
     } else {
       statusCodeForNoData = StatusCodes.NOT_FOUND;
@@ -257,30 +277,53 @@ class AuthController {
     rollNo,
     courseId,
   }: UserRegisterForm) {
+    let sendingStatusCodes;
+    let sendingMessageForUser;
+    let responseResult;
+    let dataVariables;
+
+    // ✅ Step 1: Validate with Zod FIRST — before any DB queries or hashing
+    const checkUserSchema = userRegisterFormSchema.safeParse({
+      name: name,
+      email: email,
+      password: password,
+      branch_name: branchName,
+      college_id: collegeId,
+      domain_id: domainId,
+      roll_no: rollNo,
+      course_id: courseId,
+    });
+
+    if (!checkUserSchema?.success) {
+      dataVariables = checkUserSchema?.error?.issues?.map((eachError) => ({
+        key: eachError.path[0],
+        message: eachError?.message,
+      }));
+
+      sendingStatusCodes = StatusCodes.UNPROCESSABLE_ENTITY;
+      sendingMessageForUser = getStatusMessage(sendingStatusCodes);
+
+      responseResult = createDataSchemaAndReturnIt({
+        status: sendingStatusCodes,
+        message: sendingMessageForUser,
+        success: false,
+        data: dataVariables,
+      });
+
+      return responseResult;
+    }
+
+    // ✅ Step 2: Hash password only after validation passes
     const hashedPassword = await bcrypt.hash(
       `${password}`,
       Number(process.env.HASH_PASSWORD),
     );
 
-    let sendingStatusCodes;
-    let sendingMessageForUser;
-    let responseResult;
-    let dataVariables;
-    let studentCollegeId;
-
+    // ✅ Step 3: Check for existing user by EMAIL ONLY (not by hashed password)
     const checkUserInDb = await db
       .select()
       .from(users)
-      .where(
-        and(
-          eq(users.user_email, email),
-          eq(users.user_password, hashedPassword),
-        ),
-      );
-
-    // If data is deleted then it will be used
-    // const data = await readCSV("./public/UI_Designer_course.csv");
-    // const insertData = await createData(data, [90, 91, 92, 93, 94, 95]);
+      .where(eq(users.user_email, email));
 
     if (checkUserInDb.length > 0) {
       sendingStatusCodes = StatusCodes.CONFLICT;
@@ -296,79 +339,58 @@ class AuthController {
       });
 
       return responseResult;
-    } else {
-      const checkUserSchema = userRegisterFormSchema.safeParse({
-        name: name,
-        email: email,
-        password: password,
-        branch_name: branchName,
-        college_id: collegeId,
-        domain_id: domainId,
-        roll_no: rollNo,
-        course_id: courseId,
-      });
-
-      if (!checkUserSchema?.success) {
-        dataVariables = checkUserSchema?.error?.issues?.map((eachError) => ({
-          key: eachError.path[0],
-          message: eachError?.message,
-        }));
-
-        sendingStatusCodes = StatusCodes.UNPROCESSABLE_ENTITY;
-        sendingMessageForUser = getStatusMessage(sendingStatusCodes);
-
-        responseResult = createDataSchemaAndReturnIt({
-          status: sendingStatusCodes,
-          message: sendingMessageForUser,
-          success: false,
-          data: dataVariables,
-        });
-
-        return responseResult;
-      }
-
-      const insertUser = await db
-        .insert(users)
-        .values({
-          user_email: email,
-          user_password: hashedPassword,
-          role: "STUDENT",
-        })
-        .$returningId();
-
-      studentCollegeId = String(rollNo).match(/\d+(\.\d+)?/g);
-
-      const insertStudent = await db.insert(students).values({
-        student_name: name,
-        student_email_id: `${email}`,
-        student_password: hashedPassword,
-        branch_name: branchName,
-        student_roll_no: Number(
-          String(studentCollegeId?.[0]) +
-          String(studentCollegeId?.[1]) +
-          studentCollegeId?.[2],
-        ),
-        student_college_id: collegeId,
-        student_id: insertUser[0]?.user_id,
-        student_course_id: courseId,
-      });
-
-      if (insertStudent) {
-        sendingStatusCodes = StatusCodes.OK;
-        sendingMessageForUser = getStatusMessage(sendingStatusCodes);
-
-        responseResult = createDataSchemaAndReturnIt({
-          status: sendingStatusCodes,
-          message: sendingMessageForUser,
-          success: true,
-          data: {
-            success_message: "User registered successfully",
-          },
-        });
-
-        return responseResult;
-      }
     }
+
+    // ✅ Step 4: Insert into users table
+    const insertUser = await db
+      .insert(users)
+      .values({
+        user_email: email,
+        user_password: hashedPassword,
+        role: "STUDENT",
+      })
+      .$returningId();
+
+    // ✅ Step 5: Safely parse roll number — strip non-digits to avoid NaN
+    const parsedRollNo = parseInt(String(rollNo).replace(/\D/g, ""), 10);
+    const safeRollNo = isNaN(parsedRollNo) ? 0 : parsedRollNo;
+
+    const insertStudent = await db.insert(students).values({
+      student_name: name,
+      student_email_id: `${email}`,
+      student_password: hashedPassword,
+      branch_name: branchName,
+      student_roll_no: safeRollNo,
+      student_college_id: collegeId,
+      student_id: insertUser[0]?.user_id,
+      student_course_id: courseId,
+    });
+
+    if (insertStudent) {
+      sendingStatusCodes = StatusCodes.OK;
+      sendingMessageForUser = getStatusMessage(sendingStatusCodes);
+
+      responseResult = createDataSchemaAndReturnIt({
+        status: sendingStatusCodes,
+        message: sendingMessageForUser,
+        success: true,
+        data: {
+          success_message: "User registered successfully",
+        },
+      });
+
+      return responseResult;
+    }
+
+    // ✅ Fallback — prevents function from returning undefined
+    sendingStatusCodes = StatusCodes.INTERNAL_SERVER_ERROR;
+    sendingMessageForUser = getStatusMessage(sendingStatusCodes);
+    return createDataSchemaAndReturnIt({
+      status: sendingStatusCodes,
+      message: sendingMessageForUser,
+      success: false,
+      data: { error: "Registration failed unexpectedly. Please try again." },
+    });
   }
 
   async registerNewTeacher({
@@ -384,16 +406,7 @@ class AuthController {
     let statusCodeMessage;
     let dataVariables;
 
-    const hashedPassword = await bcrypt.hash(
-      `${password}`,
-      Number(process.env.HASH_PASSWORD),
-    );
-
-    const checkUserInDb = await db
-      .select()
-      .from(users)
-      .where(eq(users.user_email, emailAddress));
-
+    // ✅ Step 1: Validate with Zod FIRST
     const checkAppErrorForTeacher = teacherRegistrationSchema.safeParse({
       name: fullName,
       email: emailAddress,
@@ -423,6 +436,18 @@ class AuthController {
       return results;
     }
 
+    // ✅ Step 2: Hash password after validation
+    const hashedPassword = await bcrypt.hash(
+      `${password}`,
+      Number(process.env.HASH_PASSWORD),
+    );
+
+    // ✅ Step 3: Check for duplicate email only
+    const checkUserInDb = await db
+      .select()
+      .from(users)
+      .where(eq(users.user_email, emailAddress));
+
     if (checkUserInDb?.length > 0) {
       statusCode = StatusCodes.CONFLICT;
       statusCodeMessage = getStatusMessage(statusCode);
@@ -436,44 +461,53 @@ class AuthController {
         },
       });
       return results;
-    } else {
-      const insertIntoUsers = await db
-        .insert(users)
-        .values({
-          user_email: emailAddress,
-          user_password: hashedPassword,
-          role: "TEACHER",
-        })
-        .$returningId();
-
-      if (insertIntoUsers?.length > 0) {
-        const insertIntoTeacherDb = await db.insert(teachers).values({
-          teacher_email_id: emailAddress,
-          teacher_name: fullName,
-          teacher_password: hashedPassword,
-          teacher_course_id: assignedCourseId,
-          teacher_experience: experience,
-          teacher_technicalities: technicalSkills,
-          teacher_user_id: insertIntoUsers?.[0].user_id,
-        });
-
-        if (insertIntoTeacherDb?.length > 0) {
-          statusCode = StatusCodes.OK;
-          statusCodeMessage = getStatusMessage(statusCode);
-
-          results = createDataSchemaAndReturnIt({
-            status: statusCode,
-            message: statusCodeMessage,
-            success: true,
-            data: {
-              success_message: "User registered successfully",
-            },
-          });
-
-          return results;
-        }
-      }
     }
+
+    // ✅ Step 4: Insert into users and teachers tables
+    const insertIntoUsers = await db
+      .insert(users)
+      .values({
+        user_email: emailAddress,
+        user_password: hashedPassword,
+        role: "TEACHER",
+      })
+      .$returningId();
+
+    if (insertIntoUsers?.length > 0) {
+      await db.insert(teachers).values({
+        teacher_email_id: emailAddress,
+        teacher_name: fullName,
+        teacher_password: hashedPassword,
+        teacher_course_id: assignedCourseId,
+        teacher_experience: experience,
+        teacher_technicalities: technicalSkills,
+        teacher_user_id: insertIntoUsers?.[0].user_id,
+      });
+
+      statusCode = StatusCodes.OK;
+      statusCodeMessage = getStatusMessage(statusCode);
+
+      results = createDataSchemaAndReturnIt({
+        status: statusCode,
+        message: statusCodeMessage,
+        success: true,
+        data: {
+          success_message: "Teacher registered successfully",
+        },
+      });
+
+      return results;
+    }
+
+    // ✅ Fallback
+    statusCode = StatusCodes.INTERNAL_SERVER_ERROR;
+    statusCodeMessage = getStatusMessage(statusCode);
+    return createDataSchemaAndReturnIt({
+      status: statusCode,
+      message: statusCodeMessage,
+      success: false,
+      data: { error: "Teacher registration failed. Please try again." },
+    });
   }
 
   async forgotPassword(email: string) {
