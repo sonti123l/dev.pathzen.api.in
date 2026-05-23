@@ -195,7 +195,6 @@ class AuthController {
           data: { error: "Failed to update session. Please try again." },
         });
         return responseResult;
-
       } else {
         const getTeacherDetails = await db
           .select()
@@ -282,7 +281,6 @@ class AuthController {
     let responseResult;
     let dataVariables;
 
-    // ✅ Step 1: Validate with Zod FIRST — before any DB queries or hashing
     const checkUserSchema = userRegisterFormSchema.safeParse({
       name: name,
       email: email,
@@ -313,13 +311,11 @@ class AuthController {
       return responseResult;
     }
 
-    // ✅ Step 2: Hash password only after validation passes
     const hashedPassword = await bcrypt.hash(
       `${password}`,
       Number(process.env.HASH_PASSWORD),
     );
 
-    // ✅ Step 3: Check for existing user by EMAIL ONLY (not by hashed password)
     const checkUserInDb = await db
       .select()
       .from(users)
@@ -341,7 +337,6 @@ class AuthController {
       return responseResult;
     }
 
-    // ✅ Step 4: Insert into users table
     const insertUser = await db
       .insert(users)
       .values({
@@ -351,16 +346,12 @@ class AuthController {
       })
       .$returningId();
 
-    // ✅ Step 5: Safely parse roll number — strip non-digits to avoid NaN
-    const parsedRollNo = parseInt(String(rollNo).replace(/\D/g, ""), 10);
-    const safeRollNo = isNaN(parsedRollNo) ? 0 : parsedRollNo;
-
     const insertStudent = await db.insert(students).values({
       student_name: name,
       student_email_id: `${email}`,
       student_password: hashedPassword,
       branch_name: branchName,
-      student_roll_no: safeRollNo,
+      student_roll_no: rollNo,
       student_college_id: collegeId,
       student_id: insertUser[0]?.user_id,
       student_course_id: courseId,
@@ -593,7 +584,9 @@ class AuthController {
         status: statusCode,
         message: "Expired OTP",
         success: false,
-        data: { error: "The provided OTP has expired. Please request a new one." },
+        data: {
+          error: "The provided OTP has expired. Please request a new one.",
+        },
       });
       return responseResult;
     }
@@ -660,14 +653,14 @@ class AuthController {
       status: statusCode,
       message: "OTP resent successfully",
       success: true,
-      data: { success_message: "A new OTP has been sent to your email address." },
+      data: {
+        success_message: "A new OTP has been sent to your email address.",
+      },
     });
     return responseResult;
   }
 
   async resetPassword(email: string, otp: string, newPassword: string) {
-
-
     // Verify OTP first
     const verifyResult = await this.verifyOtp(email, otp);
     if (!verifyResult?.success) {
@@ -691,7 +684,10 @@ class AuthController {
       status: statusCode,
       message: "Password reset successfully",
       success: true,
-      data: { success_message: "Your password has been changed successfully. You can now login." },
+      data: {
+        success_message:
+          "Your password has been changed successfully. You can now login.",
+      },
     });
     return responseResult;
   }

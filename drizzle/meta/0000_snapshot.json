@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "c2638a5b-adbc-4209-81c5-ea03841bea3e",
+  "id": "46b9cbd2-6fd6-4625-a681-98886cc71e15",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "admin": {
@@ -528,9 +528,9 @@
         },
         "student_roll_no": {
           "name": "student_roll_no",
-          "type": "int",
+          "type": "varchar(30)",
           "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
           "autoincrement": false
         },
         "student_college_id": {

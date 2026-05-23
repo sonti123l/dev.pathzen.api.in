@@ -73,7 +73,7 @@ CREATE TABLE `students` (
 	`student_password` varchar(255) NOT NULL,
 	`created_at` timestamp DEFAULT (now()),
 	`branch_name` varchar(255) NOT NULL,
-	`student_roll_no` int NOT NULL,
+	`student_roll_no` varchar(30),
 	`student_college_id` int,
 	`student_id` int,
 	`student_course_id` int,
