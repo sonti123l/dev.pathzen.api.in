@@ -281,6 +281,9 @@ class AuthController {
     let responseResult;
     let dataVariables;
 
+    // const data_modules = await readCSV("./public/UX_Designer_course.csv");
+    // const came_into_sub_modules = await createData(data_modules, [86, 87, 88, 89, 90, 91, 92]);
+
     const checkUserSchema = userRegisterFormSchema.safeParse({
       name: name,
       email: email,
@@ -373,7 +376,6 @@ class AuthController {
       return responseResult;
     }
 
-    // ✅ Fallback — prevents function from returning undefined
     sendingStatusCodes = StatusCodes.INTERNAL_SERVER_ERROR;
     sendingMessageForUser = getStatusMessage(sendingStatusCodes);
     return createDataSchemaAndReturnIt({
@@ -397,7 +399,6 @@ class AuthController {
     let statusCodeMessage;
     let dataVariables;
 
-    // ✅ Step 1: Validate with Zod FIRST
     const checkAppErrorForTeacher = teacherRegistrationSchema.safeParse({
       name: fullName,
       email: emailAddress,
@@ -427,13 +428,11 @@ class AuthController {
       return results;
     }
 
-    // ✅ Step 2: Hash password after validation
     const hashedPassword = await bcrypt.hash(
       `${password}`,
       Number(process.env.HASH_PASSWORD),
     );
 
-    // ✅ Step 3: Check for duplicate email only
     const checkUserInDb = await db
       .select()
       .from(users)
@@ -454,7 +453,6 @@ class AuthController {
       return results;
     }
 
-    // ✅ Step 4: Insert into users and teachers tables
     const insertIntoUsers = await db
       .insert(users)
       .values({
@@ -490,7 +488,6 @@ class AuthController {
       return results;
     }
 
-    // ✅ Fallback
     statusCode = StatusCodes.INTERNAL_SERVER_ERROR;
     statusCodeMessage = getStatusMessage(statusCode);
     return createDataSchemaAndReturnIt({
