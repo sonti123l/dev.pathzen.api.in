@@ -1,10 +1,10 @@
 import admin from "firebase-admin";
 import type { ServiceAccount } from "firebase-admin";
 import { Messaging } from "firebase-admin/messaging";
-import { readFileSync } from "fs";
+import "dotenv/config";
 
 const serviceAccount = JSON.parse(
-  readFileSync("./serviceAccountKey.json", "utf-8"),
+  process.env.SERVICE_KEY_VALUE!,
 ) as ServiceAccount;
 
 if (!admin.apps.length) {
