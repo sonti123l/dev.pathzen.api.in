@@ -8,6 +8,9 @@ import appRouter from "./routes/appRouter.js";
 import roomRouter from "./routes/roomRouter.js";
 import checkAuthorization from "./middleware/middleware.js";
 import notifications from "./routes/notifications.js";
+// import read_data from "./config/collegesList.js";
+// import { db } from "./db/db.js";
+// import { colleges } from "./db/schema/colleges.js";
 
 const app = new Hono();
 
@@ -27,6 +30,17 @@ app.use("/rooms/*", checkAuthorization);
 
 app.route("/course", appRouter);
 app.route("/rooms", roomRouter);
+
+// const insert_colleges = async () => {
+//   for (let index = 0; index < read_data.length; index++) {
+//     await db.insert(colleges).values({
+//       college_name: read_data[index]["College Name"],
+//       college_address: read_data[index]["Address"],
+//     }) 
+//   }
+// }
+
+// insert_colleges();
 
 serve(
   {
